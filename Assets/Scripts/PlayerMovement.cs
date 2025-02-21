@@ -4,7 +4,22 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private GameObject objPlayer;
+    [SerializeField] private MazeGenerate mazeScript;
     
+    
+    // TODO:
+    // * Make script wait until MazeGenerate has a non (0,0) coordinate for starting point
+    void Start()
+    {
+        
+    }
+
+    public void CheckStartPoint()
+    {
+        Debug.Log(mazeScript.startPoint.ToString());
+        objPlayer.transform.position = mazeScript.startPoint;
+    }
+
     // Move using callback context
     public void Movement(InputAction.CallbackContext context)
     {
