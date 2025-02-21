@@ -11,7 +11,6 @@ public class PlayerMovement : MonoBehaviour
     // * Make script wait until MazeGenerate has a non (0,0) coordinate for starting point
     void Start()
     {
-        
     }
 
     public void CheckStartPoint()
