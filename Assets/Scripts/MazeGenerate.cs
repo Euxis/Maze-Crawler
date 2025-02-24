@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Events;
 
 public class MazeGenerate : MonoBehaviour
 {
@@ -12,10 +13,16 @@ public class MazeGenerate : MonoBehaviour
     private const bool Wall = true;
     private const bool Passage = false;
 
+    public UnityEvent OnGameStart;
+
     public GameObject prefabWall;
     public int mazeWidth;
     public int mazeHeight;
 
+    private int startCellY, startCellX;
+    
+    public Vector2 startPoint;
+    
     // Two dimensional array for grid and structure
     private bool[,] _mazeGrid;
 
@@ -23,8 +30,15 @@ public class MazeGenerate : MonoBehaviour
 
     void Start()
     {
+        startCellX = Random.Range(3, mazeWidth - 3);
+        startCellY = Random.Range(3, mazeHeight - 3);
+        startPoint = new Vector2(startCellX, startCellY);
+        
+        OnGameStart?.Invoke();
+        
         GenerateMaze();
     }
+    
 
     private void GenerateMaze()
     {
@@ -42,11 +56,10 @@ public class MazeGenerate : MonoBehaviour
         }
         
         // Select a random cell to be the starting point
-        int startCellX = Random.Range(3, mazeWidth - 3);
-        int startCellY = Random.Range(3, mazeHeight - 3);
+        
         _mazeGrid[startCellX, startCellY] = Passage;
 
-        HashSet<(int, int)> frontierCells = GetNeightbourCells(startCellX, startCellY, true);
+        HashSet<(int, int)> frontierCells = GetNeighborCells(startCellX, startCellY, true);
         
         // While there's frontier cells, continue creating new passages
         while (frontierCells.Any())
@@ -59,7 +72,7 @@ public class MazeGenerate : MonoBehaviour
             _mazeGrid[randomFrontierCellX, randomFrontierCellY] = Passage;
 
             // Obtain the list of passage cells which can be connected to the selected frontier cell
-            HashSet<(int, int)> candidateCells = GetNeightbourCells(randomFrontierCellX, randomFrontierCellY, false);
+            HashSet<(int, int)> candidateCells = GetNeighborCells(randomFrontierCellX, randomFrontierCellY, false);
             if (candidateCells.Any())
             {
                 // Select a random passage to connect with the frontier cell
@@ -88,7 +101,7 @@ public class MazeGenerate : MonoBehaviour
             // remove the frontier cell that has been converted to a passage
             frontierCells.Remove(randomFrontierCell);
             
-            frontierCells.UnionWith(GetNeightbourCells(randomFrontierCellX, randomFrontierCellY, true));
+            frontierCells.UnionWith(GetNeighborCells(randomFrontierCellX, randomFrontierCellY, true));
         }
         
         // Deactivate the GameObjects of the walls that are a passage
@@ -104,7 +117,7 @@ public class MazeGenerate : MonoBehaviour
         }
     }
 
-    private HashSet<(int, int)> GetNeightbourCells(int x, int y, bool checkFrontier)
+    private HashSet<(int, int)> GetNeighborCells(int x, int y, bool checkFrontier)
     {
         HashSet<(int, int)> newNeighbourCells = new HashSet<(int, int)>();
         
