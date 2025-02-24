@@ -6,18 +6,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject objPlayer;
     [SerializeField] private MazeGenerate mazeScript;
     
-    
-    // TODO:
-    // * Make script wait until MazeGenerate has a non (0,0) coordinate for starting point
-    void Start()
-    {
-    }
-
     public void CheckStartPoint()
     {
         Debug.Log(mazeScript.startPoint.ToString());
         objPlayer.transform.position = mazeScript.startPoint;
     }
+    
+    
 
     // Move using callback context
     public void Movement(InputAction.CallbackContext context)
@@ -28,6 +23,17 @@ public class PlayerMovement : MonoBehaviour
         // move up/down/left/right based on the vector2
         if (context.performed)
         {
+            var obstacle = Physics2D.OverlapPoint(
+                (Vector2)objPlayer.transform.position + contextValue,
+                LayerMask.GetMask("Wall") // Replace this with tag of wall
+            );
+
+            if (obstacle)
+            {
+                return;
+            }
+            
+            //Physics2D.OverlapPoint()
             // No diagonal movement, detect if x or y is more/less than 0.
             if (contextValue.x > 0 || contextValue.x < 0)
             {

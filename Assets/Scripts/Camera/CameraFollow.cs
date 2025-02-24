@@ -49,7 +49,7 @@ public class CameraFollow : MonoBehaviour
     private void MoveCamera() {
         if(state == CameraState.Movement)
         {
-            cameraTransform.position = Vector2.Lerp(cameraTransform.position, playerPosition, 0.01f);
+            cameraTransform.position = Vector2.Lerp(cameraTransform.position, playerPosition, 0.05f);
             camera.orthographicSize = Mathf.Lerp(camera.orthographicSize, targetZoom, Time.deltaTime * zoomSpeed);
         }
         else if (state == CameraState.Dialogue) {
