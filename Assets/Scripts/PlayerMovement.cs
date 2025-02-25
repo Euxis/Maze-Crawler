@@ -5,14 +5,27 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private GameObject objPlayer;
     [SerializeField] private MazeGenerate mazeScript;
-    
+
+    private Vector2 nextPosition;
+    [SerializeField] private Vector2 gridPosition;
+
     public void CheckStartPoint()
     {
         Debug.Log(mazeScript.startPoint.ToString());
+        gridPosition = mazeScript.startPoint;
         objPlayer.transform.position = mazeScript.startPoint;
+        nextPosition = objPlayer.transform.position;
     }
-    
-    
+
+    void Update()
+    {
+        InterpolateMovement();
+    }
+
+    private void InterpolateMovement()
+    {
+        objPlayer.transform.position = Vector2.Lerp(objPlayer.transform.position, gridPosition, 0.5f);
+    }
 
     // Move using callback context
     public void Movement(InputAction.CallbackContext context)
@@ -24,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
         if (context.performed)
         {
             var obstacle = Physics2D.OverlapPoint(
-                (Vector2)objPlayer.transform.position + contextValue,
+                (Vector2)gridPosition + contextValue,
                 LayerMask.GetMask("Wall") // Replace this with tag of wall
             );
 
@@ -33,18 +46,23 @@ public class PlayerMovement : MonoBehaviour
                 return;
             }
             
-            //Physics2D.OverlapPoint()
             // No diagonal movement, detect if x or y is more/less than 0.
             if (contextValue.x > 0 || contextValue.x < 0)
             {
                 // Move the player a set distance right/left
-                objPlayer.transform.position = (Vector2)objPlayer.transform.position + Vector2.right * (contextValue.x / Mathf.Abs(contextValue.x));
+                gridPosition += Vector2.right * (contextValue.x/Mathf.Abs(contextValue.x));
+                //nextPosition = (Vector2)objPlayer.transform.position + Vector2.right * (contextValue.x / Mathf.Abs(contextValue.x));
+
+                //objPlayer.transform.position = (Vector2)objPlayer.transform.position + Vector2.right * (contextValue.x / Mathf.Abs(contextValue.x));
             }
 
             if (contextValue.y > 0 || contextValue.y < 0)
             {
                 // Move the player a set distance up/down
-                objPlayer.transform.position = (Vector2)objPlayer.transform.position + Vector2.up * (contextValue.y / Mathf.Abs(contextValue.y));
+                gridPosition += Vector2.up * (contextValue.y/Mathf.Abs(contextValue.y));
+                //nextPosition = (Vector2)objPlayer.transform.position + Vector2.up * (contextValue.y / Mathf.Abs(contextValue.y));
+
+                //objPlayer.transform.position = (Vector2)objPlayer.transform.position + Vector2.up * (contextValue.y / Mathf.Abs(contextValue.y));
             }
         }
     }
