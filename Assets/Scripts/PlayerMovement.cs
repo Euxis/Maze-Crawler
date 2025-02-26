@@ -57,9 +57,11 @@ public class PlayerMovement : MonoBehaviour
                 (Vector2)gridPosition + contextValue,
                 LayerMask.GetMask("Wall") 
             );
+            var areaObstacle = Physics2D.OverlapBox((Vector2)gridPosition + contextValue, new Vector2(0.5f, 0.5f), 0f);
             // If it is, then don't move
-            if (obstacle)
+            if (areaObstacle)
             {
+                Debug.Log("Wall");
                 return;
             }
             

@@ -112,7 +112,8 @@ public class MazeGenerate : MonoBehaviour
             {
                 if (_mazeGrid[x, y] == Passage)
                 {
-                    _mazeStructure[x,y].SetActive(false);
+                    Destroy(_mazeStructure[x,y]);
+                    //.SetActive(false);
                 }
             }
         }
