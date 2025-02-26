@@ -16,6 +16,7 @@ public class MazeGenerate : MonoBehaviour
     public UnityEvent OnGameStart;
 
     public GameObject prefabWall;
+    
     public int mazeWidth;
     public int mazeHeight;
 
@@ -111,7 +112,8 @@ public class MazeGenerate : MonoBehaviour
             {
                 if (_mazeGrid[x, y] == Passage)
                 {
-                    _mazeStructure[x,y].SetActive(false);
+                    Destroy(_mazeStructure[x,y]);
+                    //.SetActive(false);
                 }
             }
         }

@@ -27,7 +27,6 @@ public class CameraFollow : MonoBehaviour
 
     void Start()
     {
-        playerPosition = new Vector3(playerTransform.position.x, playerTransform.position.y, 1) ;
 
         // for readability
         
@@ -35,6 +34,12 @@ public class CameraFollow : MonoBehaviour
         cameraTransform = transform;
         transform.position = playerPosition;
         MovementMode();
+    }
+
+    public void SetStartPoint()
+    {
+        playerPosition = new Vector3(playerTransform.position.x, playerTransform.position.y, 1) ;
+
     }
 
     void Update()
