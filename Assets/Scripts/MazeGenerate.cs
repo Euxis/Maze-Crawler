@@ -16,6 +16,7 @@ public class MazeGenerate : MonoBehaviour
     public UnityEvent OnGameStart;
 
     public GameObject prefabWall;
+    
     public int mazeWidth;
     public int mazeHeight;
 

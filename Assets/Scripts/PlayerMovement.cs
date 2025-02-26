@@ -6,12 +6,16 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject objPlayer;
     [SerializeField] private MazeGenerate mazeScript;
 
-    private Vector2 nextPosition;
-    [SerializeField] private Vector2 gridPosition;
+    private Vector2 nextPosition;       // Unused
+    [SerializeField]  Vector2 gridPosition;       // stores player position according to grid
 
+    /// <summary>
+    /// An event to be invoked when the maze is done generating.
+    /// Gets the starting point from MazeGenerate script and sets the player's
+    /// starting point to it.
+    /// </summary>
     public void CheckStartPoint()
     {
-        Debug.Log(mazeScript.startPoint.ToString());
         gridPosition = mazeScript.startPoint;
         objPlayer.transform.position = mazeScript.startPoint;
         nextPosition = objPlayer.transform.position;
@@ -22,46 +26,66 @@ public class PlayerMovement : MonoBehaviour
         InterpolateMovement();
     }
 
+    // Smoothly moves the player to the next position
     private void InterpolateMovement()
     {
         objPlayer.transform.position = Vector2.Lerp(objPlayer.transform.position, gridPosition, 0.5f);
     }
 
-    // Move using callback context
+    // Find the next intersection to move to
+    // Intersections:
+    // * Have more than one path
+    // * Corner
+    public void FindIntersection(InputAction.CallbackContext context)
+    {
+    }
+
+    /// <summary>
+    /// Move using callback context
+    /// </summary>
+    /// <param name="context"></param>
     public void Movement(InputAction.CallbackContext context)
     {
         // Read the Vector2 value from the context
         Vector2 contextValue = context.ReadValue<Vector2>();
         
-        // move up/down/left/right based on the vector2
+        // Move up/down/left/right based on the vector2
         if (context.performed)
         {
+            // Check if the next point is obstructed by a wall
             var obstacle = Physics2D.OverlapPoint(
                 (Vector2)gridPosition + contextValue,
-                LayerMask.GetMask("Wall") // Replace this with tag of wall
+                LayerMask.GetMask("Wall") 
             );
-
+            // If it is, then don't move
             if (obstacle)
             {
                 return;
             }
             
+            // This somehow fixes clipping issues
+            if (context.canceled)
+            {
+                return;
+            }
+
             // No diagonal movement, detect if x or y is more/less than 0.
-            if (contextValue.x > 0 || contextValue.x < 0)
+            if (contextValue.x != 0)
             {
                 // Move the player a set distance right/left
+                
                 gridPosition += Vector2.right * (contextValue.x/Mathf.Abs(contextValue.x));
+                
                 //nextPosition = (Vector2)objPlayer.transform.position + Vector2.right * (contextValue.x / Mathf.Abs(contextValue.x));
-
                 //objPlayer.transform.position = (Vector2)objPlayer.transform.position + Vector2.right * (contextValue.x / Mathf.Abs(contextValue.x));
             }
 
-            if (contextValue.y > 0 || contextValue.y < 0)
+            if (contextValue.y != 0)
             {
                 // Move the player a set distance up/down
                 gridPosition += Vector2.up * (contextValue.y/Mathf.Abs(contextValue.y));
+                
                 //nextPosition = (Vector2)objPlayer.transform.position + Vector2.up * (contextValue.y / Mathf.Abs(contextValue.y));
-
                 //objPlayer.transform.position = (Vector2)objPlayer.transform.position + Vector2.up * (contextValue.y / Mathf.Abs(contextValue.y));
             }
         }
