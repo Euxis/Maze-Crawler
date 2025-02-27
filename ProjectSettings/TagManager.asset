@@ -42,5 +42,9 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: MazeWall
+    uniqueID: 1270545759
+    locked: 0
   m_RenderingLayers:
   - Default
+  - MazeWall

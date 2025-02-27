@@ -2,6 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
+using UnityEngine.Tilemaps;
 
 public class MazeGenerate : MonoBehaviour
 {
@@ -10,12 +12,16 @@ public class MazeGenerate : MonoBehaviour
      * Based on Prim's algorithm.
      */
     
+    // TODO: Modify code to use Tilemaps instead of Prefabs of sprites
+    
     private const bool Wall = true;
     private const bool Passage = false;
 
     public UnityEvent OnGameStart;
 
     public GameObject prefabWall;
+    public Tile wallTile;
+    [FormerlySerializedAs("tilemapMaze")] public Tilemap mazeTilemap;
     
     public int mazeWidth;
     public int mazeHeight;
@@ -31,6 +37,7 @@ public class MazeGenerate : MonoBehaviour
 
     void Start()
     {
+        wallTile.color = Color.green;
         startCellX = Random.Range(3, mazeWidth - 3);
         startCellY = Random.Range(3, mazeHeight - 3);
         startPoint = new Vector2(startCellX, startCellY);
@@ -51,8 +58,11 @@ public class MazeGenerate : MonoBehaviour
             for (int y = 0; y < mazeHeight; y++)
             {
                 _mazeGrid[x, y] = Wall;
+                /*
                 _mazeStructure[x, y] = Instantiate(prefabWall, new Vector2(x * 1f, y * 1f), Quaternion.identity,
                     GetComponent<Transform>());
+                */
+                mazeTilemap.SetTile(new Vector3Int(x, y, 0), wallTile);
             }
         }
         
@@ -112,7 +122,8 @@ public class MazeGenerate : MonoBehaviour
             {
                 if (_mazeGrid[x, y] == Passage)
                 {
-                    Destroy(_mazeStructure[x,y]);
+                    mazeTilemap.SetTile(new Vector3Int(x, y, 0), null);
+                    //Destroy(_mazeStructure[x,y]);
                     //.SetActive(false);
                 }
             }
