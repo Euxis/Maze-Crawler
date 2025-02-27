@@ -53,13 +53,13 @@ public class PlayerMovement : MonoBehaviour
         if (context.performed)
         {
             // Check if the next point is obstructed by a wall
-            /*var obstacle = Physics2D.OverlapPoint(
+            var obstacle = Physics2D.OverlapPoint(
                 (Vector2)gridPosition + contextValue/3,
                 LayerMask.GetMask("Wall") 
-            );*/
+            );
             var areaObstacle = Physics2D.OverlapBox((Vector2)gridPosition + contextValue/3, new Vector2(0.5f, 0.5f), 0f);
             // If it is, then don't move
-            if (areaObstacle)
+            if (areaObstacle || obstacle)
             {
                 Debug.Log("Wall");
                 return;

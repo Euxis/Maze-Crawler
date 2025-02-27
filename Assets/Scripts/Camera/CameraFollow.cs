@@ -68,7 +68,7 @@ public class CameraFollow : MonoBehaviour
     /// </summary>
     public void MovementMode() {
         state = CameraState.Movement;
-        targetZoom = 5f;
+        targetZoom = 3.5f;
     }
 
     /// <summary>
