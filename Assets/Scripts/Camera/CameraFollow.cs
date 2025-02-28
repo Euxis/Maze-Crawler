@@ -8,6 +8,8 @@ public class CameraFollow : MonoBehaviour
     public enum CameraState { Movement, Dialogue}
     public CameraState state = CameraState.Movement;
 
+    [SerializeField] private MazeGenerate mazeGenerate;
+    
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private Transform playerTransform;
     private Vector3 playerPosition;
@@ -38,7 +40,7 @@ public class CameraFollow : MonoBehaviour
 
     public void SetStartPoint()
     {
-        playerPosition = new Vector3(playerTransform.position.x, playerTransform.position.y, 1) ;
+        cameraTransform.position = mazeGenerate.startPoint;
 
     }
 
