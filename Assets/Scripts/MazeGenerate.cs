@@ -1,9 +1,12 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 using UnityEngine.Tilemaps;
+using Random = UnityEngine.Random;
+using System.Threading.Tasks;
 
 public class MazeGenerate : MonoBehaviour
 {
@@ -12,56 +15,72 @@ public class MazeGenerate : MonoBehaviour
      * Based on Prim's algorithm.
      */
     
-    // TODO: Modify code to use Tilemaps instead of Prefabs of sprites
-    
     private const bool Wall = true;
     private const bool Passage = false;
+    
+    // minigame node prefab
+    [SerializeField] private GameObject minigamePrefab;
 
     public UnityEvent OnGameStart;
 
-    public GameObject prefabWall;
+    // Maze tilemap
     public Tile wallTile;
-    [FormerlySerializedAs("tilemapMaze")] public Tilemap mazeTilemap;
+    public Tilemap mazeTilemap;
     
+    // Maze parameters
     public int mazeWidth;
     public int mazeHeight;
-
-    private int startCellY, startCellX;
     
+    // Starting point of maze
     public Vector2 startPoint;
+    private int startCellY, startCellX;
     
     // Two dimensional array for grid and structure
     private bool[,] _mazeGrid;
 
-    private GameObject[,] _mazeStructure;
+    // List of a tuple to hold coordinates of possible minigame cells
+    [SerializeField] private List<(int x, int y)> minigameCells = new List<(int, int)>();
 
     void Start()
     {
+        // Change wall color to green
         wallTile.color = Color.green;
+        
+        // Choose a random starting point for the maze 
         startCellX = Random.Range(3, mazeWidth - 3);
         startCellY = Random.Range(3, mazeHeight - 3);
         startPoint = new Vector2(startCellX, startCellY);
         
+        // Tell the other scripts to set player and camera position to starting point
         OnGameStart?.Invoke();
         
+        // Generate the maze
         GenerateMaze();
+        
+        // Find minigame cells
+        for (int row = 1; row < mazeHeight - 1; row++)
+        {
+            // Search this row for any dead ends
+            FindPathEnd(row, _mazeGrid);
+        }
+        // For each cell in the list, there is a 1/3 chance to spawn a node there
+        foreach(var cells in minigameCells)
+        {
+            int chance = Random.Range(0, 3);
+            if (chance == 1)
+                Instantiate(minigamePrefab, new Vector2(cells.Item1, cells.Item2), Quaternion.identity, GetComponent<Transform>());
+        }
     }
     
-
     private void GenerateMaze()
     {
         _mazeGrid = new bool[mazeWidth, mazeHeight];
-        _mazeStructure = new GameObject[mazeWidth, mazeHeight];
 
         for (int x = 0; x < mazeWidth; x++)
         {
             for (int y = 0; y < mazeHeight; y++)
             {
                 _mazeGrid[x, y] = Wall;
-                /*
-                _mazeStructure[x, y] = Instantiate(prefabWall, new Vector2(x * 1f, y * 1f), Quaternion.identity,
-                    GetComponent<Transform>());
-                */
                 mazeTilemap.SetTile(new Vector3Int(x, y, 0), wallTile);
             }
         }
@@ -122,9 +141,8 @@ public class MazeGenerate : MonoBehaviour
             {
                 if (_mazeGrid[x, y] == Passage)
                 {
+                    // Check for all sides, if there's only one opening, then
                     mazeTilemap.SetTile(new Vector3Int(x, y, 0), null);
-                    //Destroy(_mazeStructure[x,y]);
-                    //.SetActive(false);
                 }
             }
         }
@@ -179,5 +197,39 @@ public class MazeGenerate : MonoBehaviour
             }
         }
         return newNeighbourCells;
+    }
+
+    /// <summary>
+    /// Goes through a row of tiles and add any dead-end cells to a list of possible
+    /// minigame nodes.
+    /// </summary>
+    /// <param name="row"></param>
+    /// <param name="array"></param>
+    private void FindPathEnd(int row, bool[,] array)
+    {
+        for (int col = 1; col < mazeWidth - 1; col++)
+        {
+            int passageCount = 0;
+            
+            if (array[row, col] == Wall)
+                continue;
+
+            // Look at the adjacent cells and count how many are passage tiles (empty tiles)
+            if(array[row, col + 1] == Passage)
+                passageCount++;
+            if(array[row + 1, col] == Passage)
+                passageCount++;
+            if(array[row, col - 1] == Passage)
+                passageCount++;
+            if(array[row - 1, col] == Passage)
+                passageCount++;
+
+            // If there is more than one passage, then don't add a minigame node
+            if (passageCount > 1)
+                continue;
+            
+            // otherwise, add the coordinates of the tile to the minigame array
+            minigameCells.Add((row, col));
+        }
     }
 }
