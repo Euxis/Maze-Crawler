@@ -5,7 +5,8 @@ public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private GameObject objPlayer;
     [SerializeField] private MazeGenerate mazeScript;
-
+    [SerializeField] private SoundManager soundManager;
+    
     private Vector2 nextPosition;       // Unused
     [SerializeField]  Vector2 gridPosition;       // stores player position according to grid
 
@@ -77,7 +78,8 @@ public class PlayerMovement : MonoBehaviour
                 // Move the player a set distance right/left
                 
                 gridPosition += Vector2.right * (contextValue.x/Mathf.Abs(contextValue.x));
-                
+                soundManager.PlayStep();
+
                 //nextPosition = (Vector2)objPlayer.transform.position + Vector2.right * (contextValue.x / Mathf.Abs(contextValue.x));
                 //objPlayer.transform.position = (Vector2)objPlayer.transform.position + Vector2.right * (contextValue.x / Mathf.Abs(contextValue.x));
             }
@@ -87,6 +89,7 @@ public class PlayerMovement : MonoBehaviour
                 // Move the player a set distance up/down
                 gridPosition += Vector2.up * (contextValue.y/Mathf.Abs(contextValue.y));
                 
+                soundManager.PlayStep();
                 //nextPosition = (Vector2)objPlayer.transform.position + Vector2.up * (contextValue.y / Mathf.Abs(contextValue.y));
                 //objPlayer.transform.position = (Vector2)objPlayer.transform.position + Vector2.up * (contextValue.y / Mathf.Abs(contextValue.y));
             }
