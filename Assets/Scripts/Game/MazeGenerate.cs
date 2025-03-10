@@ -17,11 +17,15 @@ public class MazeGenerate : MonoBehaviour
     
     private const bool Wall = true;
     private const bool Passage = false;
+    private const int minigameSpawnChance = 4;
     
     // minigame node prefab
     [SerializeField] private GameObject minigamePrefab;
 
     public UnityEvent OnGameStart;
+    
+    // Parent object to create minigame nodes under
+    [SerializeField] private Transform minigameParent;
 
     // Maze tilemap
     public Tile wallTile;
@@ -66,9 +70,9 @@ public class MazeGenerate : MonoBehaviour
         // For each cell in the list, there is a 1/3 chance to spawn a node there
         foreach(var cells in minigameCells)
         {
-            int chance = Random.Range(0, 3);
-            if (chance == 1)
-                Instantiate(minigamePrefab, new Vector2(cells.Item1, cells.Item2), Quaternion.identity, GetComponent<Transform>());
+            int chance = Random.Range(0, minigameSpawnChance);
+            if (chance == minigameSpawnChance - 1)
+                Instantiate(minigamePrefab, new Vector2(cells.Item1, cells.Item2), Quaternion.identity, minigameParent);
         }
     }
     
