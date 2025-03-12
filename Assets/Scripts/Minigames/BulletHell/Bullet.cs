@@ -12,13 +12,12 @@ public class Bullet : MonoBehaviour
     public TrailRenderer trail;
     public Color bulletColor = Color.red;
     
-    private Rigidbody2D rb;
+    [SerializeField] private Rigidbody2D rb;
     private SpriteRenderer spriteRenderer;
 
       // Awake is called when the script is initialized
     void Awake()
     {
-        rb = GetComponent<Rigidbody2D>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         
         if (spriteRenderer != null)

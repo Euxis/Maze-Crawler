@@ -1,12 +1,13 @@
 // PlayerController.cs
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     [Header("Player Settings")]
     public float moveSpeed = 5f;
     public int maxLives = 3;
-    private int currentLives;
+    public int currentLives;
     
     [Header("Gameplay Area")]
     public float minX = -8f;
@@ -14,41 +15,49 @@ public class PlayerController : MonoBehaviour
     public float minY = -4f;
     public float maxY = 4f;
 
+    [Header("Input")] 
+    private float horizontalInput;
+    private float verticalInput;
+    private Vector2 movement;
+
     [Header("References")]
     public GameObject hitEffect;
     public AudioClip hitSound;
     
-    private Rigidbody2D rb;
+    [SerializeField] private Rigidbody2D rbPlayer;
     private AudioSource audioSource;
-    private GameManager gameManager;
     
-     // Start is called before the first frame update
+    [SerializeField] private GameObject objGameManager;
+    private GameManager gameManager;
+
+    void Awake()
+    {
+        
+    }
+    
     void Start()
     {
-        rb = GetComponent<Rigidbody2D>();
+        // Set references
         audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
-        {
-            audioSource = gameObject.AddComponent<AudioSource>();
-        }
+        if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+        gameManager = objGameManager.GetComponent<GameManager>();
         
-        gameManager = FindObjectOfType<GameManager>();
         currentLives = maxLives;
         
         // Update UI
-        if (gameManager != null)
-        {
-            gameManager.UpdateLivesUI(currentLives);
-        }
+        gameManager.UpdateLivesUI(currentLives);
     }
-    
-    void Update()
+
+    // Movement using input system instead of hardcoded buttons
+    public void Movement(InputAction.CallbackContext context)
     {
-        // Player movement
-        float horizontalInput = Input.GetAxis("Horizontal");
-        float verticalInput = Input.GetAxis("Vertical");
+        Vector2 input = context.ReadValue<Vector2>();
         
-        Vector2 movement = new Vector2(horizontalInput, verticalInput);
+        // Get X and Y axis of input
+        horizontalInput = input.x;
+        verticalInput = input.y;
+        
+        movement = new Vector2(horizontalInput, verticalInput);
         
         // Normalize diagonal movement
         if (movement.magnitude > 1)
@@ -56,16 +65,17 @@ public class PlayerController : MonoBehaviour
             movement.Normalize();
         }
         
-        rb.linearVelocity = movement * moveSpeed;
+        rbPlayer.linearVelocity = movement * moveSpeed;
         
         // Clamp position to gameplay area
-        Vector2 position = rb.position;
+        Vector2 position = rbPlayer.position;
         position.x = Mathf.Clamp(position.x, minX, maxX);
         position.y = Mathf.Clamp(position.y, minY, maxY);
-        rb.position = position;
+        rbPlayer.position = position;
     }
     
-    void OnTriggerEnter2D(Collider2D other)
+    // Take damage when the player touches a bullet and delete the bullet
+    private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.CompareTag("Bullet"))
         {
@@ -74,8 +84,9 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    public void TakeDamage()
+    private void TakeDamage()
     {
+        Debug.Log("Hit!");
         currentLives--;
         
         // Play hit effect

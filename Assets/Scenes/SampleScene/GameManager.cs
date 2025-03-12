@@ -1,5 +1,8 @@
 // GameManager.cs
+
+using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
@@ -7,8 +10,10 @@ public class GameManager : MonoBehaviour
 {
     // UI References to show on-screen information
     [Header("UI References")]
-    public Text livesText; // Text component to display remaining lives
+    public TMP_Text livesText; // Text component to display remaining lives
     public GameObject gameOverPanel;
+
+    public UnityEvent gameOverEvent;
     
     private bool isGameOver = false;
     
@@ -23,15 +28,14 @@ public class GameManager : MonoBehaviour
     
     public void UpdateLivesUI(int lives)
     {
-        if (livesText != null)
-        {
-            livesText.text = "Lives: " + lives;
-        }
+        livesText.text = lives.ToString();
     }
     
     public void GameOver()
     {
         isGameOver = true;
+        
+        gameOverEvent?.Invoke();
         
         // Show game over panel
         if (gameOverPanel != null)
@@ -43,7 +47,8 @@ public class GameManager : MonoBehaviour
         BulletSpawner[] spawners = FindObjectsOfType<BulletSpawner>();
         foreach (BulletSpawner spawner in spawners)
         {
-            spawner.enabled = false; // Stop each Bullet Spawner
+            // Stop each bullet spawner
+            spawner.StopSpawning();
         }
     }
     
