@@ -26,17 +26,39 @@ public class GameManager : MonoBehaviour
     public UnityEvent gamePause;        // Pauses all game objects in the scene
     public UnityEvent gameStart;        // Starts all game objects in the scene
     
+    
     private BulletSpawner[] spawners;
     [SerializeField] private GameObject bulletSpawnerPrefab;
-
     
     [SerializeField] private List<Vector2> spawnPoints;
 
+    private MediatorScript mediatorScript;
+    
     // Position of spawners
     private int positionX;
     private int positionY;
-    
+
+    private void Awake()
+    {   
+        mediatorScript = GameObject.Find("Mediator").GetComponent<MediatorScript>();
+    }
+
     void Start()
+    {
+        
+    }
+
+    public void ClearGame()
+    {
+        completeText.gameObject.SetActive(false);
+        
+        foreach (BulletSpawner spawner in spawners)
+        {
+            Destroy(spawner.gameObject);
+        }
+    }
+
+    public void StartGame()
     {
         // Initialize UI
         gameOverPanel.SetActive(false);
@@ -126,31 +148,18 @@ public class GameManager : MonoBehaviour
         // Set text
         livesText.text = lives.ToString();
     }
-    
-    /// <summary>
-    /// The fail state procedure.
-    /// </summary>
-    public void GameOver()
-    {
-        // Show game over panel
-        gameOverPanel.SetActive(true);
-        
-        // Stop all bullet spawners
-        StartSpawning(false);
-
-        // Invoke game over event
-        gameOverEvent?.Invoke();
-    }
 
     /// <summary>
-    /// The success state procedure.
+    /// Ends the game, passing true if the player wins, or false if the player loses
     /// </summary>
-    public void GameComplete()
+    /// <param name="b"></param>
+    public void isGameSuccess(bool b)
     {
         StartSpawning(false);
-        StartCoroutine(DoGameComplete());
+        if (b) StartCoroutine(DoGameComplete());
+        else StartCoroutine(DoGameFail());
     }
-    
+
 
     /// <summary>
     /// Sets all bullet spawners as able/unable to shoot
@@ -171,12 +180,29 @@ public class GameManager : MonoBehaviour
     private IEnumerator DoGameComplete()
     {
         completeText.gameObject.SetActive(true);
-        gamePause?.Invoke();
+        gameOverEvent?.Invoke();
         yield return new WaitForSeconds(1f);
         // Just go back to maze scene for now
-        SceneManager.LoadScene(1);
+        
+        ClearGame();
+        mediatorScript.RewardPoints(1);
+        mediatorScript.BulletHellToMaze();
     }
-    
+
+    private IEnumerator DoGameFail()
+    {
+        Debug.Log("Failed");
+        // Show game over panel
+        gameOverPanel.SetActive(true);
+        // Invoke game over event
+        gameOverEvent?.Invoke();
+        yield return new WaitForSeconds(1f);
+
+        ClearGame();
+        mediatorScript.DeductLife();
+        mediatorScript.BulletHellToMaze();
+    }
+
     /// <summary>
     /// Starts countdown at the start of the game
     /// </summary>
@@ -184,12 +210,15 @@ public class GameManager : MonoBehaviour
     private IEnumerator DoStartCountdown()
     {
         StartSpawning(false);
+        
+        // make sure the countdown text is active
+        countdownText.gameObject.SetActive(true);
         countdownText.text = "3";
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         countdownText.text = "2";
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         countdownText.text = "1";
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1f);
         countdownText.text = "Begin";
         yield return new WaitForSeconds(1f);
         countdownText.gameObject.SetActive(false);

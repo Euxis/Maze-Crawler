@@ -91,6 +91,7 @@ public class Timer : MonoBehaviour
     /// </summary>
     private void FinishTimer()
     {
+        timerText.text = "00.00";   // Reset timer
         OnTimerEnd?.Invoke();
     }
 }

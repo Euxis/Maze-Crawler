@@ -8,8 +8,10 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private SoundManager soundManager;
     
     private Vector2 nextPosition;       // Unused
+    public Vector2 lastPosition;
     [SerializeField]  Vector2 gridPosition;       // stores player position according to grid
-
+    private bool canInterp = true;
+    
     /// <summary>
     /// An event to be invoked when the maze is done generating.
     /// Gets the starting point from MazeGenerate script and sets the player's
@@ -22,9 +24,19 @@ public class PlayerMovement : MonoBehaviour
         nextPosition = objPlayer.transform.position;
     }
 
+    /// <summary>
+    /// Returns player to previous position if minigame is lost
+    /// </summary>
+    public void ReturnLastPosition()
+    {
+        canInterp = false;
+        objPlayer.transform.position = lastPosition;
+        canInterp = true;
+    }
+
     void Update()
     {
-        InterpolateMovement();
+        if(canInterp) InterpolateMovement();
     }
 
     // Smoothly moves the player to the next position
@@ -32,15 +44,7 @@ public class PlayerMovement : MonoBehaviour
     {
         objPlayer.transform.position = Vector2.Lerp(objPlayer.transform.position, gridPosition, 8f * Time.deltaTime);
     }
-
-    // Find the next intersection to move to
-    // Intersections:
-    // * Have more than one path
-    // * Corner
-    public void FindIntersection(InputAction.CallbackContext context)
-    {
-    }
-
+    
     /// <summary>
     /// Move using callback context
     /// </summary>
@@ -58,6 +62,7 @@ public class PlayerMovement : MonoBehaviour
                 (Vector2)gridPosition + contextValue/2,
                 LayerMask.GetMask("Wall") 
             );
+            // Second wall check using boxcast
             var areaObstacle = Physics2D.OverlapBox(
                 (Vector2)gridPosition + contextValue/2, 
                 new Vector2(0.5f, 0.5f), 
@@ -79,7 +84,7 @@ public class PlayerMovement : MonoBehaviour
             if (contextValue.x != 0)
             {
                 // Move the player a set distance right/left
-                
+                lastPosition = gridPosition;
                 gridPosition += Vector2.right * (contextValue.x/Mathf.Abs(contextValue.x));
                 soundManager.PlayStep();
 
@@ -90,6 +95,8 @@ public class PlayerMovement : MonoBehaviour
             if (contextValue.y != 0)
             {
                 // Move the player a set distance up/down
+                lastPosition = gridPosition;
+
                 gridPosition += Vector2.up * (contextValue.y/Mathf.Abs(contextValue.y));
                 
                 soundManager.PlayStep();

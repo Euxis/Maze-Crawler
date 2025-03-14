@@ -44,7 +44,12 @@ public class PlayerController : MonoBehaviour
     
     // Add invincibility window when player gets hit
     [SerializeField] private bool isInvincible = false;
-    
+
+    private void Awake()
+    {
+        gameObject.SetActive(true);
+    }
+
     void Start()
     {
         // Set references
@@ -58,11 +63,24 @@ public class PlayerController : MonoBehaviour
         
         // Get original color of player
         colorPlayer = spriteRendererPlayer.color;
+        gameObject.SetActive(true);
         this.enabled = false;
+    }
+
+    public void ResetStats()
+    {
+        rbPlayer.gameObject.transform.position = Vector2.zero;
+        currentLives = maxLives;
+        gameManager.UpdateLivesUI(currentLives, maxLives);
+        spriteRendererPlayer.color = colorPlayer;
+        isInvincible = false;
+        moveSpeed = 5f;
     }
 
     public void CanStart(bool b)
     {
+        gameObject.SetActive(b);
+
         this.enabled = b;
     }
 
@@ -159,7 +177,7 @@ public class PlayerController : MonoBehaviour
         // Trigger game over
         if (gameManager != null)
         {
-            gameManager.GameOver();
+            gameManager.isGameSuccess(false);
         }
         
         // Optional: Disable player controls or trigger death animation

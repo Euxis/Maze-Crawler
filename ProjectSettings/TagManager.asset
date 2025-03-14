@@ -6,6 +6,14 @@ TagManager:
   tags:
   - Wall
   - Bullet
+  - Minigame
+  - Mediator
+  - MazeControl
+  - MazeGame
+  - BulletGame
+  - BulletControl
+  - MazeScene
+  - BulletScene
   layers:
   - Default
   - TransparentFX
