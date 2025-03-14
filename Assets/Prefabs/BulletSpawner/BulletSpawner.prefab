@@ -50,8 +50,9 @@ MonoBehaviour:
   spawnRate: 0.5
   randomizeDirection: 1
   fixedDirection: {x: 0, y: -1}
+  player: {fileID: 0}
   spawnPattern: 0
-  bulletsPerPattern: 5
+  bulletsPerPattern: 3
   spreadAngle: 30
 --- !u!212 &3140188118437715161
 SpriteRenderer:

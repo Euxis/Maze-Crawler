@@ -1,4 +1,7 @@
 // PlayerController.cs
+
+using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,6 +9,8 @@ public class PlayerController : MonoBehaviour
 {
     [Header("Player Settings")]
     public float moveSpeed = 5f;
+
+    public float hurtSpeed = 3f;    // Speed when player is in invincibility window
     public int maxLives = 3;
     public int currentLives;
     
@@ -19,6 +24,7 @@ public class PlayerController : MonoBehaviour
     private float horizontalInput;
     private float verticalInput;
     private Vector2 movement;
+    private Vector2 playerPosition;
 
     [Header("References")]
     public GameObject hitEffect;
@@ -28,29 +34,45 @@ public class PlayerController : MonoBehaviour
     private AudioSource audioSource;
     
     [SerializeField] private GameObject objGameManager;
-    private GameManager gameManager;
-
-    void Awake()
-    {
-        
-    }
+    [SerializeField] private GameManager gameManager;
+    
+    // Sprite renderer things
+    [SerializeField] private SpriteRenderer spriteRendererPlayer;
+    private Color colorPlayer;
+    // Transparency for when the player is invincible after being hit
+    private float invincibleAlphaVal = 0.5f;
+    
+    // Add invincibility window when player gets hit
+    [SerializeField] private bool isInvincible = false;
     
     void Start()
     {
         // Set references
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
-        gameManager = objGameManager.GetComponent<GameManager>();
         
         currentLives = maxLives;
-        
+
         // Update UI
-        gameManager.UpdateLivesUI(currentLives);
+        gameManager.UpdateLivesUI(currentLives, maxLives);
+        
+        // Get original color of player
+        colorPlayer = spriteRendererPlayer.color;
+        this.enabled = false;
     }
 
-    // Movement using input system instead of hardcoded buttons
+    public void CanStart(bool b)
+    {
+        this.enabled = b;
+    }
+
+    /// <summary>
+    /// Top down movement using new input system.
+    /// </summary>
+    /// <param name="context"></param>
     public void Movement(InputAction.CallbackContext context)
     {
+        
         Vector2 input = context.ReadValue<Vector2>();
         
         // Get X and Y axis of input
@@ -59,34 +81,46 @@ public class PlayerController : MonoBehaviour
         
         movement = new Vector2(horizontalInput, verticalInput);
         
+        /*
         // Normalize diagonal movement
         if (movement.magnitude > 1)
         {
-            movement.Normalize();
+            
         }
+        */
         
+        movement.Normalize();
         rbPlayer.linearVelocity = movement * moveSpeed;
         
         // Clamp position to gameplay area
-        Vector2 position = rbPlayer.position;
-        position.x = Mathf.Clamp(position.x, minX, maxX);
-        position.y = Mathf.Clamp(position.y, minY, maxY);
-        rbPlayer.position = position;
+        /*
+        playerPosition = rbPlayer.position;
+        playerPosition.x = Mathf.Clamp(playerPosition.x, minX, maxX);
+        playerPosition.y = Mathf.Clamp(playerPosition.y, minY, maxY);
+        rbPlayer.position = playerPosition;
+        */
     }
-    
-    // Take damage when the player touches a bullet and delete the bullet
+
+    /// <summary>
+    /// Take damage when the player hits a bullet and then delete
+    /// the bullet.
+    /// </summary>
+    /// <param name="other"></param>
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Bullet"))
+        // If the player is currently invincible, don't take damage
+        if (other.CompareTag("Bullet") && !isInvincible)
         {
-            TakeDamage();
             Destroy(other.gameObject);
+            TakeDamage();
         }
     }
     
+    /// <summary>
+    /// Decrease current amount of lives and start invincibility window.
+    /// </summary>
     private void TakeDamage()
     {
-        Debug.Log("Hit!");
         currentLives--;
         
         // Play hit effect
@@ -102,19 +136,25 @@ public class PlayerController : MonoBehaviour
         }
         
         // Update UI
-        if (gameManager != null)
-        {
-            gameManager.UpdateLivesUI(currentLives);
-        }
+        gameManager.UpdateLivesUI(currentLives, maxLives);
         
         // Check for game over
         if (currentLives <= 0)
         {
-            Die();
+            Die();    
+        }
+
+        if (gameObject.activeSelf)
+        {
+            StartCoroutine(DamageCooldown());
+            
         }
     }
     
-    void Die()
+    /// <summary>
+    /// Ends the game when HP reaches 0
+    /// </summary>
+    private void Die()
     {
         // Trigger game over
         if (gameManager != null)
@@ -128,5 +168,27 @@ public class PlayerController : MonoBehaviour
         // Optional: Destroy player with delay or deactivate
         // Destroy(gameObject, 1f);
         gameObject.SetActive(false);
+    }
+
+    /// <summary>
+    /// Grants player an invincibility window when they get hit, and also turns them
+    /// red. Will decrease speed slightly.
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator DamageCooldown()
+    {
+        spriteRendererPlayer.color = new Color(Color.red.r, Color.red.g, Color.red.b, invincibleAlphaVal);
+        isInvincible = true;
+        
+        // Slow down the player
+        var tmp = moveSpeed;
+        moveSpeed = hurtSpeed;
+        
+        yield return new WaitForSeconds(2.0f);
+        spriteRendererPlayer.color = colorPlayer;
+        
+        // Resume normal speed
+        isInvincible = false;
+        moveSpeed = tmp;
     }
 }

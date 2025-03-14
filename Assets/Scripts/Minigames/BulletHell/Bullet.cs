@@ -41,11 +41,24 @@ public class Bullet : MonoBehaviour
     {
         speed = newSpeed;
     }
+
+    public void Launch()
+    {
+        rb.linearVelocity = direction * speed;
+    }
+
+    public void Launch(Vector2 dir, float velocity)
+    {
+        dir = dir.normalized;
+        rb.linearVelocity = dir * velocity;
+    }
     
+    /*
     void FixedUpdate()
     {
         rb.linearVelocity = direction * speed;
     }
+    */
     
     void OnBecameInvisible()
     {

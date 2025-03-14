@@ -21,7 +21,7 @@ public class MinigameManager : MonoBehaviour
     // Load shooter minigame
     public void LoadSideScrollingShooter()
     {
-        SceneManager.LoadScene(2, LoadSceneMode.Single);
+        SceneManager.LoadScene(3, LoadSceneMode.Single);
         //SceneManager.UnloadSceneAsync(1);
     }
 }
