@@ -32,6 +32,8 @@ public class GameManager : MonoBehaviour
     
     [SerializeField] private List<Vector2> spawnPoints;
 
+    [SerializeField] private BulletHellAudioManager bulletHellAudio;
+    
     private MediatorScript mediatorScript;
     
     // Position of spawners
@@ -181,7 +183,7 @@ public class GameManager : MonoBehaviour
     {
         completeText.gameObject.SetActive(true);
         gameOverEvent?.Invoke();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
         // Just go back to maze scene for now
         
         ClearGame();
@@ -191,12 +193,13 @@ public class GameManager : MonoBehaviour
 
     private IEnumerator DoGameFail()
     {
+        bulletHellAudio.StopMusic();
         Debug.Log("Failed");
         // Show game over panel
         gameOverPanel.SetActive(true);
         // Invoke game over event
         gameOverEvent?.Invoke();
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(2f);
 
         ClearGame();
         mediatorScript.DeductLife();

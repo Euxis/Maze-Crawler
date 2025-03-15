@@ -18,13 +18,24 @@ public class MinigameManager : MonoBehaviour
     private MediatorScript mediatorScript;
 
     private Color minigameColor;
+    
+    [SerializeField]
+    private SoundManager soundManager;
 
     
     // Create a singleton minigame manager
     private void Awake()
     {
-        mediatorScript = GameObject.FindGameObjectWithTag("Mediator").GetComponent<MediatorScript>();
         if (instance == null) instance = this;
+
+        mediatorScript = GameObject.FindGameObjectWithTag("Mediator").GetComponent<MediatorScript>();
+
+    }
+
+    private void Start()
+    {
+        soundManager.PlayBGM();
+
     }
 
     /// <summary>
