@@ -10,7 +10,14 @@ public class TitleScreen : MonoBehaviour
         if (context.performed)
         {
             // switch scenes
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene("ManagerScene", LoadSceneMode.Single);
+
+            SceneManager.LoadScene("SampleScene", LoadSceneMode.Additive);
+            SceneManager.LoadScene("BulletHell", LoadSceneMode.Additive);
+            
+            SceneManager.SetActiveScene(SceneManager.GetSceneByName("SampleScene"));
+            SceneManager.UnloadSceneAsync("TitleScreen");
+
         }
     }
 }

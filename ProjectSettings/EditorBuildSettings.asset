@@ -20,6 +20,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/BulletHell.unity
     guid: 8d68e64c16c204f3e93661a7909119d1
+  - enabled: 1
+    path: Assets/Scenes/ManagerScene.unity
+    guid: 8d951bfbe19958a48920dac8a462982d
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0

@@ -12,7 +12,10 @@ public class MinigameInteract : MonoBehaviour
         Debug.Log("Loading minigame");
         if (other.gameObject.CompareTag("Minigame"))
         {
-            MinigameManager.instance.LoadSideScrollingShooter();
+            // Send the gameobject to the MinigameManager for destruction if minigame is successful
+            MinigameManager.instance.MinigameTouched(other.gameObject);
+            
+            MinigameManager.instance.LoadMinigame();
             //minigameManager.LoadSideScrollingShooter();
         }
     }
