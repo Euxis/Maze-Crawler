@@ -187,23 +187,23 @@ public class GameManager : MonoBehaviour
         // Just go back to maze scene for now
         
         ClearGame();
-        mediatorScript.RewardPoints(1);
-        mediatorScript.BulletHellToMaze();
+        MediatorScript.instance.RewardPoints(1);
+        MediatorScript.instance.BulletHellToMaze();
     }
 
     private IEnumerator DoGameFail()
     {
         bulletHellAudio.StopMusic();
-        Debug.Log("Failed");
         // Show game over panel
         gameOverPanel.SetActive(true);
         // Invoke game over event
         gameOverEvent?.Invoke();
+        ClearGame();
+
         yield return new WaitForSeconds(2f);
 
-        ClearGame();
-        mediatorScript.DeductLife();
-        mediatorScript.BulletHellToMaze();
+        MediatorScript.instance.DeductLife();
+        MediatorScript.instance.BulletHellToMaze();
     }
 
     /// <summary>

@@ -77,10 +77,14 @@ public class PlayerController : MonoBehaviour
         moveSpeed = 5f;
     }
 
+    /// <summary>
+    /// Enables player to move
+    /// </summary>
+    /// <param name="b"></param>
     public void CanStart(bool b)
     {
         gameObject.SetActive(b);
-
+        currentLives = maxLives;
         this.enabled = b;
     }
 
@@ -139,6 +143,7 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void TakeDamage()
     {
+        Debug.Log("ouch");
         currentLives--;
         
         // Play hit effect

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -32,6 +33,11 @@ public class Timer : MonoBehaviour
         duration = time;
         maxDuration = duration;
         StartCoroutine(DoTimer());
+    }
+
+    private void OnEnable()
+    {
+        timerText.text = "00.00";
     }
 
     private void Awake()

@@ -1,11 +1,14 @@
 using System;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 
 public class MediatorScript : MonoBehaviour
 {
     // This script handles cross scene communication
     private int wonPoints = 0;
+    
+    public static MediatorScript instance;
     
     // References to all managers
     [SerializeField]
@@ -19,6 +22,7 @@ public class MediatorScript : MonoBehaviour
     // Manager scripts
     [SerializeField]
     private Points pointsScript;
+    
     
     // Scene game objects
     [SerializeField]
@@ -35,6 +39,43 @@ public class MediatorScript : MonoBehaviour
 
     private GameObject storedMinigame;
 
+    public UnityEvent onWin;
+    public UnityEvent onLose;
+
+    private bool isBGM = true;
+    private bool isStep = true;
+    private bool isShader = true;
+
+    public bool GetBGM()
+    {
+        return isBGM;
+    }
+
+    public void SetBGM(bool value)
+    {
+        isBGM = value;
+    }
+
+    public bool GetStep()
+    {
+        return isStep;
+    }
+
+    public void SetStep(bool value)
+    {
+        isStep = value;
+    }
+
+    public bool GetShader()
+    {
+        return isShader;
+    }
+
+    public void SetShader(bool value)
+    {
+        isShader = value;
+    }
+
     private void Start()
     {
         maze_SceneObject = GameObject.FindWithTag("MazeScene");
@@ -48,6 +89,7 @@ public class MediatorScript : MonoBehaviour
          
         bulletHell_Camera = GameObject.Find("bulletHell_Camera").GetComponent<Camera>();
         maze_Camera = GameObject.Find("maze_Camera").GetComponent<Camera>();
+        
         maze_AudioListener = maze_Camera.GetComponent<AudioListener>();
         bulletHell_AudioListener = bulletHell_Camera.gameObject.GetComponent<AudioListener>();
  
@@ -55,6 +97,8 @@ public class MediatorScript : MonoBehaviour
         
         // Disable bullet hell minigame
         DisableBulletHell();
+
+        if (instance == null) instance = this;
     }
 
     private void DisableBulletHell()
@@ -79,6 +123,7 @@ public class MediatorScript : MonoBehaviour
     {
         wonPoints += p;
         if (!maze_GameManager) return;
+        onWin?.Invoke();
         pointsScript.AddPoints(p);
         wonPoints = 0;
         Destroy(storedMinigame);
@@ -88,7 +133,6 @@ public class MediatorScript : MonoBehaviour
     /// The fail state of a game. Will set back the player to the previous tile so they don't enter the minigame
     /// again and deduct one life.
     /// </summary>
-    /// <param name="l"></param>
     public void DeductLife()
     {
         if (!maze_GameManager) return;
@@ -112,13 +156,13 @@ public class MediatorScript : MonoBehaviour
         bulletHell_GameManager.SetActive(true);
         bulletHell_SceneObject.SetActive(true);
         
-
-        //SceneManager.LoadSceneAsync("BulletHell", LoadSceneMode.Additive);
+        // Start the bullethell game
         bulletHell_GameManager.GetComponent<GameManager>().StartGame();
     }
 
     public void BulletHellToMaze()
     {
+        // Disable main gameObjects in bullethell
         bulletHell_AudioListener.enabled = false;
         bulletHell_GameManager.SetActive(false);
         bulletHell_ControlManager.SetActive(false);
@@ -129,7 +173,5 @@ public class MediatorScript : MonoBehaviour
         maze_GameManager.SetActive(true);
         maze_ControlManager.SetActive(true);
         maze_SceneObject.SetActive(true);
-
-        //SceneManager.UnloadSceneAsync("BulletHell");
     }
 }
