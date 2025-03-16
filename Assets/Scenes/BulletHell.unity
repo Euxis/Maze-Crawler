@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 150504649}
   - component: {fileID: 150504651}
   - component: {fileID: 150504652}
+  - component: {fileID: 150504653}
   m_Layer: 0
   m_Name: bulletHell_GameManager
   m_TagString: BulletGame
@@ -311,6 +312,19 @@ MonoBehaviour:
   minigameClip: {fileID: 8300000, guid: 62aa733fe8671924baf9fd641daaf16f, type: 3}
   minigameClip2: {fileID: 8300000, guid: 8fd50be51788f4d488094e0b5f1bd067, type: 3}
   sourceBGM: {fileID: 296793827}
+--- !u!114 &150504653
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 150504648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49369f522213ca84d89e245da75db386, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraData: {fileID: 1345790916}
 --- !u!1 &296793825
 GameObject:
   m_ObjectHideFlags: 0

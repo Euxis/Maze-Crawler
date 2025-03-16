@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5731351336846992886}
   - component: {fileID: 4379484298972206667}
   - component: {fileID: 1550303035606674763}
+  - component: {fileID: 900777942921101454}
   m_Layer: 0
   m_Name: objMinigame
   m_TagString: Minigame
@@ -135,6 +136,18 @@ BoxCollider2D:
   m_AutoTiling: 0
   m_Size: {x: 1, y: 1}
   m_EdgeRadius: 0
+--- !u!114 &900777942921101454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1120853097079433072}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5c1464fd82e60242b6214a581b1089f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4707471097297493756
 GameObject:
   m_ObjectHideFlags: 0

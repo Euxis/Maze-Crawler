@@ -133,7 +133,7 @@ public class BulletSpawner : MonoBehaviour
     
     private void SpawnLineBullets()
     {
-        if (player == null) return; // Ensure player reference exists
+        if (player == null) player = GameObject.FindGameObjectWithTag("Player"); // Ensure player reference exists
 
         // Get direction from enemy to player
         Vector2 playerDirection = (player.transform.position - transform.position).normalized;

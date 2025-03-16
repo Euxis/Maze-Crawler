@@ -8,6 +8,10 @@ public class BulletHellAudioManager : MonoBehaviour
 
     public void StartMusic()
     {
+        sourceBGM.volume = 0.05f;
+
+        if (!MediatorScript.instance.GetBGM()) return;    
+        
         int randomSong = Random.Range(0, 2);
         if (randomSong == 0)
         {
@@ -19,6 +23,8 @@ public class BulletHellAudioManager : MonoBehaviour
         }
 
     }
+    
+    
 
     public void StopMusic()
     {
