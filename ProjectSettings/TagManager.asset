@@ -14,6 +14,8 @@ TagManager:
   - BulletControl
   - MazeScene
   - BulletScene
+  - BulletSpawner
+  - BulletHellPrefab
   layers:
   - Default
   - TransparentFX
@@ -22,7 +24,7 @@ TagManager:
   - Water
   - UI
   - Wall
-  - 
+  - BulletSpawner
   - 
   - 
   - 

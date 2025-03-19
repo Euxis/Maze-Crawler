@@ -1,4 +1,5 @@
 using System;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -8,6 +9,7 @@ public class MediatorScript : MonoBehaviour
     // This script handles cross scene communication
     private int wonPoints = 0;
     
+    // Singleton
     public static MediatorScript instance;
     
     // References to all managers
@@ -22,7 +24,6 @@ public class MediatorScript : MonoBehaviour
     // Manager scripts
     [SerializeField]
     private Points pointsScript;
-    
     
     // Scene game objects
     [SerializeField]
@@ -39,12 +40,16 @@ public class MediatorScript : MonoBehaviour
 
     private GameObject storedMinigame;
 
+    // Events
     public UnityEvent onWin;
     public UnityEvent onLose;
 
     private bool isBGM = true;
     private bool isStep = true;
     private bool isShader = true;
+    
+    // Shader settings
+    public SetShaderVars setShaderVars;
 
     public bool GetBGM()
     {
@@ -78,6 +83,7 @@ public class MediatorScript : MonoBehaviour
 
     private void Start()
     {
+        // Get all the references needed
         maze_SceneObject = GameObject.FindWithTag("MazeScene");
         bulletHell_SceneObject = GameObject.FindWithTag("BulletScene");
          
@@ -95,9 +101,15 @@ public class MediatorScript : MonoBehaviour
  
         pointsScript = maze_GameManager.GetComponent<Points>();
         
+        setShaderVars = this.gameObject.GetComponent<SetShaderVars>();
+        
+        // Make sure chromatic abberation is reset when game starts
+        setShaderVars.ResetChromatic();
+        
         // Disable bullet hell minigame
         DisableBulletHell();
 
+        // Set singleton
         if (instance == null) instance = this;
     }
 

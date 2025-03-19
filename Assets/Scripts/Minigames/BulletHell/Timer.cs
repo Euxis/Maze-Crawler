@@ -12,10 +12,7 @@ public class Timer : MonoBehaviour
     private float duration;         // The duration of the timer
     private float maxDuration;
     public UnityEvent OnTimerEnd;   // The event invoked when the timer goes to 0
-    public UnityEvent OnTimerHalfway;
     private Action timerTick;
-
-    private bool halfwayPressure = false;   // Has the halfway difficulty been executed
 
     //private BulletSpawner[] spawners;
 

@@ -45,6 +45,9 @@ public class PlayerController : MonoBehaviour
     // Add invincibility window when player gets hit
     [SerializeField] private bool isInvincible = false;
 
+    // Fullscreen shader 
+    [SerializeField] private SetShaderVars setShaderVars;
+    
     private void Awake()
     {
         gameObject.SetActive(true);
@@ -55,6 +58,7 @@ public class PlayerController : MonoBehaviour
         // Set references
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
+        setShaderVars = FindAnyObjectByType<SetShaderVars>().GetComponent<SetShaderVars>();
         
         currentLives = maxLives;
 
@@ -143,7 +147,6 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void TakeDamage()
     {
-        Debug.Log("ouch");
         currentLives--;
         
         // Play hit effect
@@ -200,6 +203,7 @@ public class PlayerController : MonoBehaviour
     /// <returns></returns>
     private IEnumerator DamageCooldown()
     {
+        MediatorScript.instance.setShaderVars.SetChromatic(0.007f);
         spriteRendererPlayer.color = new Color(Color.red.r, Color.red.g, Color.red.b, invincibleAlphaVal);
         isInvincible = true;
         
@@ -211,6 +215,7 @@ public class PlayerController : MonoBehaviour
         spriteRendererPlayer.color = colorPlayer;
         
         // Resume normal speed
+        MediatorScript.instance.setShaderVars.ResetChromatic();
         isInvincible = false;
         moveSpeed = tmp;
     }

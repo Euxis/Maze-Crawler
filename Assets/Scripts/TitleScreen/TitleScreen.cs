@@ -20,4 +20,13 @@ public class TitleScreen : MonoBehaviour
 
         }
     }
+
+    public void ExitGame(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            Application.Quit();
+        }
+    }
+    
 }

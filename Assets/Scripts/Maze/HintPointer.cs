@@ -12,7 +12,7 @@ public class HintPointer : MonoBehaviour
     [SerializeField] private GameObject pointer;    // gameobject of the pointer
     [SerializeField] private GameObject objPlayer;
     private float radius = 0.3f;    // radius from the player of how far the pointer should go
-    private bool canTrack = false;  // Whether the hint pointer is active or not
+    //private bool canTrack = false;  // Whether the hint pointer is active or not
     private float minDistance = float.PositiveInfinity;
     [SerializeField]private PrefabMinigame target = null;
     private Vector2 targetPos;

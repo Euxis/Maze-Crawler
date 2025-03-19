@@ -129,6 +129,7 @@ GameObject:
   m_Component:
   - component: {fileID: 588333166}
   - component: {fileID: 588333167}
+  - component: {fileID: 588333168}
   m_Layer: 0
   m_Name: Mediator
   m_TagString: Mediator
@@ -163,6 +164,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6bbb0362f457a674088eafe4486c234b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  bulletHell_GameManager: {fileID: 0}
+  maze_GameManager: {fileID: 0}
+  pointsScript: {fileID: 0}
+  maze_SceneObject: {fileID: 0}
+  bulletHell_Camera: {fileID: 0}
+  onWin:
+    m_PersistentCalls:
+      m_Calls: []
+  onLose:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!114 &588333168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 588333165}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89d5463d3d337154cad7376d9eaaeaca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  feature: {fileID: 1645745334390259066, guid: 45f02bac5e44d9d48a141b2bc996d720, type: 2}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
