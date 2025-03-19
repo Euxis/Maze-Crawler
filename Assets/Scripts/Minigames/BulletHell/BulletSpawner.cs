@@ -24,6 +24,8 @@ public class BulletSpawner : MonoBehaviour
     [SerializeField] private float spreadAngle = 30f;
     private int sprinklerStep = 0;
 
+    [SerializeField] private GameObject prefabParent;
+
     private bool canSpawn = false;
     
     public enum SpawnPattern
@@ -38,6 +40,13 @@ public class BulletSpawner : MonoBehaviour
     private void Awake()
     {
         player = GameObject.FindGameObjectWithTag("Player");
+        prefabParent = GameObject.FindGameObjectWithTag("BulletHellPrefab");
+        //StartCoroutine(FindPlayer());
+    }
+
+    private IEnumerator FindPlayer()
+    {
+        yield return new WaitUntil(() => player = GameObject.FindWithTag("Player"));
     }
 
     public void SetSpawnPattern(int i)
@@ -128,12 +137,19 @@ public class BulletSpawner : MonoBehaviour
     private void SpawnSingleBullet()
     {
         Vector2 direction = randomizeDirection ? Random.insideUnitCircle.normalized : fixedDirection;
-        SpawnAndSetBullet(direction, bulletSpeed, transform.position);
+        for (int i = 0; i < bulletsPerPattern; i++)
+        {
+            SpawnAndSetBullet(direction, bulletSpeed - (float)(1 * i), transform.position);
+        }
     }
     
     private void SpawnLineBullets()
     {
-        if (player == null) player = GameObject.FindGameObjectWithTag("Player"); // Ensure player reference exists
+        if (player == null) {
+            Debug.Log("Finding player");
+            StartCoroutine(FindPlayer()); // Ensure player reference exists
+            return;
+        }
 
         // Get direction from enemy to player
         Vector2 playerDirection = (player.transform.position - transform.position).normalized;
@@ -160,9 +176,12 @@ public class BulletSpawner : MonoBehaviour
     {
         float angleStep = 360f / bulletsPerPattern;
         
+        // Add some randomness to the angle
+        float randomDirectionAddition = Random.Range(0, 91);
+        
         for (int i = 0; i < bulletsPerPattern; i++)
         {
-            float angle = angleStep * i;
+            float angle = angleStep * i + randomDirectionAddition;
             Vector2 direction = new Vector2(Mathf.Cos(angle * Mathf.Deg2Rad), Mathf.Sin(angle * Mathf.Deg2Rad));
             SpawnAndSetBullet(direction, bulletSpeed, transform.position);
         }
@@ -199,7 +218,12 @@ public class BulletSpawner : MonoBehaviour
     /// <param name="origin">Where the bullet will be spawned</param>
     private void SpawnAndSetBullet(Vector2 direction, float speed, Vector2 origin)
     {
-        var bullet = Instantiate(bulletPrefab, origin, Quaternion.identity);
+        if (prefabParent == null)
+        {
+            prefabParent = GameObject.FindGameObjectWithTag("BulletHellPrefab");
+            return;
+        }
+        var bullet = Instantiate(bulletPrefab, origin, Quaternion.identity, prefabParent.transform);
 
         if (bullet.TryGetComponent(out Bullet bulletComponent))
         {

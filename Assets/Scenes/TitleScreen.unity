@@ -397,6 +397,50 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 1790872e-351a-4619-8caf-deaa2ecb4754
     m_ActionName: 'TitleMenu/Start[/Keyboard/enter]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 63b67583-7eeb-43e3-96bf-235883a82d1b
+    m_ActionName: 'Player: Maze/Mute BGM[/Keyboard/b]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d1656c38-fc4e-486a-9543-1481a91e6d3e
+    m_ActionName: 'Player: Maze/Mute Steps[/Keyboard/n]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2e980427-ab37-4583-adae-50abe4592b4f
+    m_ActionName: 'Player: Maze/Disable Shaders[/Keyboard/m]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ae297e29-6f52-45e2-9c8b-5af6ea6174e3
+    m_ActionName: 'Player: Maze/Quit[/Keyboard/p]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 005796fa-d5cc-4786-b7db-91333b0d65cd
+    m_ActionName: 'Player: Side Scrolling/Movement[/Keyboard/leftArrow,/Keyboard/rightArrow]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: e8b2ac2b-0eee-4c10-ab21-51aaafa87a5e
+    m_ActionName: 'Player: Side Scrolling/Jump[/Keyboard/space]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 23f38b68-ecfc-46ca-a6a7-9b4d68a1a4cf
+    m_ActionName: 'Bullet Hell/Movement[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]'
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 821525858}
+        m_TargetAssemblyTypeName: TitleScreen, Assembly-CSharp
+        m_MethodName: ExitGame
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: c01a440d-8755-4098-bd94-c7102ea66ab8
+    m_ActionName: 'TitleMenu/Exit[/Keyboard/escape]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: TitleMenu

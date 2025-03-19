@@ -12,6 +12,12 @@ public class Points : MonoBehaviour
     [SerializeField] private TMP_Text HP;
     [SerializeField] private TMP_Text gameOver;
     [SerializeField] private TMP_Text gameComplete;
+    
+    [SerializeField] private TMP_Text bitReward;
+    [SerializeField] private GameObject UI_Parent;
+
+    [SerializeField] private TMP_Text bitRewardUI;
+    
     private int pointCount;
     private int HPCount;
 
@@ -38,6 +44,7 @@ public class Points : MonoBehaviour
 
             StartCoroutine(DoGameFinish());
         }
+        if(HPCount == 3) MediatorScript.instance.setShaderVars.ResetChromatic();;
 
         if (HPCount <= 0)
         {
@@ -50,11 +57,14 @@ public class Points : MonoBehaviour
 
         if (HPCount == 2)
         {
+            MediatorScript.instance.setShaderVars.SetChromatic(0.007f);
             HP.color = Color.yellow;
             objPlayer.GetComponent<SpriteRenderer>().color = Color.yellow;
         }
         else if (HPCount == 1)
         {
+            MediatorScript.instance.setShaderVars.SetChromatic(0.01f);
+
             HP.color = Color.red;
             objPlayer.GetComponent<SpriteRenderer>().color = Color.red;
         }
@@ -72,6 +82,12 @@ public class Points : MonoBehaviour
     {
         pointCount += p;
         points.text = pointCount.ToString() + "/10";
+        
+        // Spawn point text
+        Instantiate(bitReward, objPlayer.transform.position, Quaternion.identity, UI_Parent.transform);
+        Instantiate(bitRewardUI, points.transform.position, Quaternion.identity, points.transform);
+        
+        //prefab.gameObject.GetComponent<Animation>().Play("upwards");
         if (pointCount > 10)
         {
             pointCount = 10;

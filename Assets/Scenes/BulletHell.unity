@@ -132,6 +132,7 @@ GameObject:
   - component: {fileID: 150504651}
   - component: {fileID: 150504652}
   - component: {fileID: 150504653}
+  - component: {fileID: 150504654}
   m_Layer: 0
   m_Name: bulletHell_GameManager
   m_TagString: BulletGame
@@ -194,21 +195,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  gamePause:
-    m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 1504576951}
-        m_TargetAssemblyTypeName: PlayerController, Assembly-CSharp
-        m_MethodName: CanStart
-        m_Mode: 6
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
   gameStart:
     m_PersistentCalls:
       m_Calls:
@@ -251,6 +237,8 @@ MonoBehaviour:
   bulletSpawnerPrefab: {fileID: 4950399089497432303, guid: b3df83ee8e47a3744a2222db985ec2d6, type: 3}
   spawnPoints: []
   bulletHellAudio: {fileID: 150504652}
+  _byteSpawner: {fileID: 150504654}
+  prefabParent: {fileID: 2147312875}
 --- !u!4 &150504650
 Transform:
   m_ObjectHideFlags: 0
@@ -294,9 +282,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 1
         m_CallState: 2
-  OnTimerHalfway:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!114 &150504652
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -325,6 +310,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraData: {fileID: 1345790916}
+--- !u!114 &150504654
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 150504648}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 784384b0af288094a8a2036852d2ce5f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bytePrefab: {fileID: 6895607803485676632, guid: 7efc486ae86226248bf59f284e654e52, type: 3}
 --- !u!1 &296793825
 GameObject:
   m_ObjectHideFlags: 0
@@ -2782,6 +2780,7 @@ Transform:
   - {fileID: 1981355694}
   - {fileID: 1010804953}
   - {fileID: 1391154487}
+  - {fileID: 2147312876}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1010804952
@@ -2904,6 +2903,22 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 23f38b68-ecfc-46ca-a6a7-9b4d68a1a4cf
     m_ActionName: 'Bullet Hell/Movement[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 63b67583-7eeb-43e3-96bf-235883a82d1b
+    m_ActionName: 'Player: Maze/Mute BGM[/Keyboard/b]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: d1656c38-fc4e-486a-9543-1481a91e6d3e
+    m_ActionName: 'Player: Maze/Mute Steps[/Keyboard/n]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 2e980427-ab37-4583-adae-50abe4592b4f
+    m_ActionName: 'Player: Maze/Disable Shaders[/Keyboard/m]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: ae297e29-6f52-45e2-9c8b-5af6ea6174e3
+    m_ActionName: 'Player: Maze/Quit[/Keyboard/p]'
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Bullet Hell
@@ -4287,6 +4302,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2133499199}
   m_CullTransparentMesh: 1
+--- !u!1 &2147312875
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2147312876}
+  m_Layer: 0
+  m_Name: Prefabs
+  m_TagString: BulletHellPrefab
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2147312876
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2147312875}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 819129076}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

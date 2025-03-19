@@ -23,18 +23,24 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text completeText; // Game complete text
 
     public UnityEvent gameOverEvent;    // Stops game objects and returns to maze
-    public UnityEvent gamePause;        // Pauses all game objects in the scene
     public UnityEvent gameStart;        // Starts all game objects in the scene
     
-    
     private BulletSpawner[] spawners;
+    
+    // Bullet spawner prefab
     [SerializeField] private GameObject bulletSpawnerPrefab;
     
+    // List to hold coordinates currently taken by bullet spawners
     [SerializeField] private List<Vector2> spawnPoints;
 
+    // Audio manager
     [SerializeField] private BulletHellAudioManager bulletHellAudio;
     
-    private MediatorScript mediatorScript;
+    // Byte Spawner
+    [SerializeField] private ByteSpawner _byteSpawner;
+
+    [SerializeField] private GameObject prefabParent;
+    
     
     // Position of spawners
     private int positionX;
@@ -42,7 +48,7 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {   
-        mediatorScript = GameObject.Find("Mediator").GetComponent<MediatorScript>();
+
     }
 
     void Start()
@@ -50,22 +56,32 @@ public class GameManager : MonoBehaviour
         
     }
 
+    /// <summary>
+    /// Clears all the prefabs
+    /// </summary>
     public void ClearGame()
     {
         completeText.gameObject.SetActive(false);
-        
+
+        foreach (Transform child in prefabParent.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        /*
         foreach (BulletSpawner spawner in spawners)
         {
             Destroy(spawner.gameObject);
-        }
+        }*/
     }
 
     public void StartGame()
     {
+        MediatorScript.instance.setShaderVars.ResetChromatic();
         // Initialize UI
         gameOverPanel.SetActive(false);
         
         MakeBulletSpawners();
+        _byteSpawner.MakeBytes();
         
         // Get list of spawners in game
         spawners = FindObjectsOfType<BulletSpawner>();
@@ -98,7 +114,7 @@ public class GameManager : MonoBehaviour
             int randomPattern = Random.Range(0, uniqueSpawnPatterns + 1);
 
             // create the prefab and set the spawn pattern
-            var prefab = Instantiate(bulletSpawnerPrefab, new Vector2(positionX, positionY), Quaternion.identity);
+            var prefab = Instantiate(bulletSpawnerPrefab, new Vector2(positionX, positionY), Quaternion.identity, parent: prefabParent.transform);
             var prefabScript = prefab.GetComponent<BulletSpawner>();
             prefabScript.SetSpawnPattern(randomPattern);
         }
@@ -114,6 +130,7 @@ public class GameManager : MonoBehaviour
 
         do
         {
+            // Get a random spawn point and clamp it to the min and max range
             positionX = Random.Range(-8, 9);
             positionY = Random.Range(-4, 5);
         
