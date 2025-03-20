@@ -227,7 +227,7 @@ public class BulletSpawner : MonoBehaviour
 
         if (bullet.TryGetComponent(out Bullet bulletComponent))
         {
-            bulletComponent.Launch(direction, speed);
+            //bulletComponent.Launch(direction, speed);
         }
     }
  

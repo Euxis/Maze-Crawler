@@ -1,12 +1,16 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
+/// <summary>
+/// Base class for bullets
+/// </summary>
 public class Bullet : MonoBehaviour
 {
-    private Vector2 direction;
-    private float speed;
+    [SerializeField] private float initialSpeed;
     
     [Header("Bullet Lifetime")]
-    public float lifetime = 5f;
+    [SerializeField]
+    private float lifetimeSeconds = 5f;
     
     [Header("Visual Effects")]
     public TrailRenderer trail;
@@ -16,18 +20,18 @@ public class Bullet : MonoBehaviour
     private SpriteRenderer spriteRenderer;
 
       // Awake is called when the script is initialized
-    void Awake()
+    protected void Awake()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        
-        if (spriteRenderer != null)
+        if (TryGetComponent(out spriteRenderer))
         {
             spriteRenderer.color = bulletColor;
         }
+        
         // Destroy the bullet after its lifetime expires
-        Destroy(gameObject, lifetime);
+        Destroy(gameObject, lifetimeSeconds);
     }
     
+    /*
     public void SetDirection(Vector2 dir)
     {
         direction = dir.normalized;
@@ -36,31 +40,29 @@ public class Bullet : MonoBehaviour
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
         transform.rotation = Quaternion.Euler(0, 0, angle);
     }
+    */
     
+    /*
     public void SetSpeed(float newSpeed)
     {
         speed = newSpeed;
     }
+    */
 
+    /*
     public void Launch()
     {
         rb.linearVelocity = direction * speed;
     }
+    */
 
-    public void Launch(Vector2 dir, float velocity)
+    public virtual void Launch(Vector2 dir)
     {
         dir = dir.normalized;
-        rb.linearVelocity = dir * velocity;
+        rb.linearVelocity = dir * initialSpeed;
     }
     
-    /*
-    void FixedUpdate()
-    {
-        rb.linearVelocity = direction * speed;
-    }
-    */
-    
-    void OnBecameInvisible()
+    protected void OnBecameInvisible()
     {
         // Destroy bullet when it goes offscreen
         Destroy(gameObject);
