@@ -632,6 +632,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc6a281d9c564def19151b24101df220, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyLoader: {fileID: 1445121441}
 --- !u!1 &511320704
 GameObject:
   m_ObjectHideFlags: 0
@@ -3586,8 +3587,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1445121440}
+  - component: {fileID: 1445121441}
   m_Layer: 0
-  m_Name: bulletHell_PrefabLoader
+  m_Name: bulletHell_EnemyLoader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3608,6 +3610,19 @@ Transform:
   m_Children: []
   m_Father: {fileID: 585454023}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1445121441
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1445121439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6c84515bd7853ed75bb89245bba9a2e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabPath: Prefabs/Spawnable/BulletHell
 --- !u!1 &1504576945
 GameObject:
   m_ObjectHideFlags: 0

@@ -4,10 +4,18 @@ using UnityEngine;
 
 public class PrefabLoader : MonoBehaviour
 {
+    /// <summary>
+    /// List of all loaded prefabs' objectIds
+    /// </summary>
+    public List<string> ObjectIds
+    {
+        get => prefabs.Select(x => x.ObjectId).ToList();
+    }
+    
     [SerializeField] 
     [Tooltip("The path where prefabs are located. Must be under " +
-             "Resources directory. <b>Do not include Resources in " +
-             "the path</b>.")]
+             "Resources directory. <b>Only include directories " +
+             "after Resources/</b>.")]
     private string prefabPath;
     private List<SpawnableObject> prefabs = new();
 
