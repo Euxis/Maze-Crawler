@@ -71,7 +71,7 @@ public class GameManager : MonoBehaviour
         var result = Physics2D.OverlapCircle(position, 1.0f, 
             LayerMask.GetMask("BulletSpawner"));
 
-        var free = !(result && result.CompareTag("BulletSpawner"));
+        var free = !(result && result.CompareTag("BulletSpawner") && position == Vector2.zero);
         return free;
     }
     
