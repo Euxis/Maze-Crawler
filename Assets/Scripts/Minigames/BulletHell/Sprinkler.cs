@@ -37,6 +37,8 @@ public class Sprinkler : EnemyBase
 
     public override void StartAttack()
     {
+        if (attacking) return;
+        
         // Check mainAttack
         if (!mainAttack)
         {

@@ -71,6 +71,9 @@ public class EnemyBase : MonoBehaviour
     protected IEnumerator AttackCycle(float delaySeconds, 
         Action attackAction)
     {
+        // May have to change this to be non-recursive if it
+        // causes problems
+        
         if (!attacking) yield return null;
         
         attackAction?.Invoke();
