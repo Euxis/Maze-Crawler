@@ -13,9 +13,7 @@ public class LineShooter : EnemyBase
     protected override void Setup()
     {
         // Get main attack "normal"
-        mainAttack = attacks.Attacks
-            .FirstOrDefault(
-                attack => attack.AttackId.Equals("normal"));
+        mainAttack = GetAttackPrefab("normal");
     }
 
     protected override void Attack(Attack bulletPrefab, 

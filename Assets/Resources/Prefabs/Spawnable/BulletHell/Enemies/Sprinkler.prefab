@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 3140188118437715161}
   - component: {fileID: 8326624109840789019}
   - component: {fileID: -8660496415799709149}
-  - component: {fileID: 4393981855096715716}
+  - component: {fileID: -3984878678390769904}
   m_Layer: 7
-  m_Name: BulletSpawner
+  m_Name: Sprinkler
   m_TagString: BulletSpawner
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -152,8 +152,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3121fac2e6d866c1ea464a8b83b34ef2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectId: enemy_line
---- !u!114 &4393981855096715716
+  objectId: enemy_sprinkler
+--- !u!114 &-3984878678390769904
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -162,10 +162,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 4950399089497432303}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5b1c3199692f3130856ceacd9414c6f, type: 3}
+  m_Script: {fileID: 11500000, guid: df64a559dd45da44daba9670a742335b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   attacks: {fileID: 11400000, guid: 47866f2003792ef0982c696b798abfee, type: 2}
-  fireRateSeconds: 1
-  shotsPerRound: 3
-  delayBetweenShotsSeconds: 0.2
+  angleBetweenRoundsDegrees: 30
+  fireRateSeconds: 0.5

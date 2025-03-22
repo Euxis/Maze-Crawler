@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 using UnityEngine;
 
 public class EnemyBase : MonoBehaviour
@@ -79,6 +80,19 @@ public class EnemyBase : MonoBehaviour
         StartCoroutine(AttackCycle(delaySeconds, attackAction));
     }
 
+    /// <summary>
+    /// Try to find an attack in the attacks list with given
+    /// attackId.
+    /// </summary>
+    /// <param name="attackId">ID of attack</param>
+    /// <returns>Attack with given ID or null</returns>
+    protected Attack GetAttackPrefab(string attackId)
+    {
+        return attacks.Attacks
+            .FirstOrDefault(
+                a => a.AttackId.Equals(attackId));
+    }
+    
     public void StopAttacking()
     {
         attacking = false;
