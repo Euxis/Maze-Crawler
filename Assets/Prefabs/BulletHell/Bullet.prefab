@@ -166,10 +166,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c2dba21b38fe41a9a5e8f34f37f2ad9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletId: normal
+  attackId: normal
   lifetimeSeconds: 5
   rb: {fileID: 8158754801099065232}
-  initialSpeed: 1
+  initialSpeed: 10
   trail: {fileID: 4624788395096161238}
   bulletColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!96 &4624788395096161238

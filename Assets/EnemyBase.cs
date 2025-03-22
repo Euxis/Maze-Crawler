@@ -70,6 +70,8 @@ public class EnemyBase : MonoBehaviour
     protected IEnumerator AttackCycle(float delaySeconds, 
         Action attackAction)
     {
+        if (!attacking) yield return null;
+        
         attackAction?.Invoke();
         yield return new WaitForSeconds(delaySeconds);
         
@@ -79,6 +81,7 @@ public class EnemyBase : MonoBehaviour
 
     public void StopAttacking()
     {
+        attacking = false;
         StopAllCoroutines();
     }
 }
