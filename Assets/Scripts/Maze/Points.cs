@@ -110,10 +110,13 @@ public class Points : MonoBehaviour
 
     private IEnumerator DoGameFinish()
     {
+        MediatorScript.instance.setShaderVars.ResetChromatic();
+
         foreach(var obj in PrefabMinigame.Nodes)
         {
             Destroy(obj);
         }
+
         gameComplete.gameObject.SetActive(true);
         yield return new WaitForSeconds(5f);
         SceneManager.LoadScene(0);

@@ -1,15 +1,7 @@
-// GameManager.cs
-
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.UI;
-using UnityEngine.SceneManagement;
-using System.Linq;
-using Unity.VisualScripting;
 using Random = UnityEngine.Random;
 
 public class GameManager : MonoBehaviour
@@ -24,37 +16,25 @@ public class GameManager : MonoBehaviour
 
     public UnityEvent gameOverEvent;    // Stops game objects and returns to maze
     public UnityEvent gameStart;        // Starts all game objects in the scene
-    
-    private BulletSpawner[] spawners;
-    
-    // Bullet spawner prefab
-    [SerializeField] private GameObject bulletSpawnerPrefab;
-    
-    // List to hold coordinates currently taken by bullet spawners
-    [SerializeField] private List<Vector2> spawnPoints;
 
     // Audio manager
     [SerializeField] private BulletHellAudioManager bulletHellAudio;
+    [SerializeField] private EnemyManager enemyManager;
     
     // Byte Spawner
     [SerializeField] private ByteSpawner _byteSpawner;
 
     [SerializeField] private GameObject prefabParent;
+    [SerializeField] private EnemySpawner enemySpawner;
     
+    [Header("Spawning bounds")]
+    [SerializeField] private Vector2 lowerBounds;
+    [SerializeField] private Vector2 upperBounds;
+    [SerializeField] private GameObject playerObject;
     
     // Position of spawners
     private int positionX;
     private int positionY;
-
-    private void Awake()
-    {   
-
-    }
-
-    void Start()
-    {
-        
-    }
 
     /// <summary>
     /// Clears all the prefabs
@@ -62,16 +42,8 @@ public class GameManager : MonoBehaviour
     public void ClearGame()
     {
         completeText.gameObject.SetActive(false);
-
-        foreach (Transform child in prefabParent.transform)
-        {
-            Destroy(child.gameObject);
-        }
-        /*
-        foreach (BulletSpawner spawner in spawners)
-        {
-            Destroy(spawner.gameObject);
-        }*/
+        enemyManager.DestroyAllEnemies();
+        enemyManager.ClearEnemies();
     }
 
     public void StartGame()
@@ -81,10 +53,8 @@ public class GameManager : MonoBehaviour
         gameOverPanel.SetActive(false);
         
         MakeBulletSpawners();
+        enemyManager.SetEnemiesTarget(playerObject);
         _byteSpawner.MakeBytes();
-        
-        // Get list of spawners in game
-        spawners = FindObjectsOfType<BulletSpawner>();
         
         // Start the countdown
         StartCoroutine(DoStartCountdown());
@@ -95,59 +65,26 @@ public class GameManager : MonoBehaviour
         Resources.UnloadUnusedAssets();   
     }
 
+    private bool CheckValidPosition(Vector2 position)
+    {
+        // Check for bullet spawners occupying the space
+        var result = Physics2D.OverlapCircle(position, 1.0f, 
+            LayerMask.GetMask("BulletSpawner"));
+
+        var free = !(result && result.CompareTag("BulletSpawner") && position == Vector2.zero);
+        return free;
+    }
+    
     /// <summary>
     /// Spawns random enemies on the field
     /// </summary>
     private void MakeBulletSpawners()
     {
         // Spawn between 4-5 enemies
-        int numberOfSpawners = Random.Range(3, 5);
-        
-        // Get the number of BulletSpawner spawn patterns
-        var uniqueSpawnPatterns = Enum.GetValues(typeof(BulletSpawner.SpawnPattern)).Length;
-        
-        // Randomize each stat of each prefab
-        for (int i = 0; i <= numberOfSpawners; i++)
-        {
-            RandomizeSpawnerStats();
-            
-            int randomPattern = Random.Range(0, uniqueSpawnPatterns + 1);
-
-            // create the prefab and set the spawn pattern
-            var prefab = Instantiate(bulletSpawnerPrefab, new Vector2(positionX, positionY), Quaternion.identity, parent: prefabParent.transform);
-            var prefabScript = prefab.GetComponent<BulletSpawner>();
-            prefabScript.SetSpawnPattern(randomPattern);
-        }
-        spawnPoints.Clear();
-
-    }
-
-    private void RandomizeSpawnerStats()
-    {
-        int maxAttempts = 100; // Prevent infinite looping
-        int attempts = 0;
-        Vector2 newPosition;
-
-        do
-        {
-            // Get a random spawn point and clamp it to the min and max range
-            positionX = Random.Range(-8, 9);
-            positionY = Random.Range(-4, 5);
-        
-            positionX = Mathf.Clamp(positionX, -8, 8);
-            positionY = Mathf.Clamp(positionY, -4, 4);
-
-            newPosition = new Vector2(positionX, positionY);
-            attempts++;
-            if (attempts >= maxAttempts)
-            {
-                Debug.LogWarning("RandomizeSpawnerStats exceeded max attempts!");
-                break;
-            }
-
-        } while (spawnPoints.Contains(new Vector2(positionX, positionY)) && spawnPoints.Count > 0);
-        
-        spawnPoints.Add(newPosition);
+        var numberOfSpawners = Random.Range(3, 5);
+        enemySpawner.SpawnRandomEnemies(numberOfSpawners, 
+            lowerBounds, upperBounds, 
+            CheckValidPosition);
     }
 
     /// <summary>
@@ -174,24 +111,18 @@ public class GameManager : MonoBehaviour
     /// <param name="b"></param>
     public void isGameSuccess(bool b)
     {
-        StartSpawning(false);
-        if (b) StartCoroutine(DoGameComplete());
-        else StartCoroutine(DoGameFail());
-    }
-
-
-    /// <summary>
-    /// Sets all bullet spawners as able/unable to shoot
-    /// </summary>
-    /// <param name="b"></param>
-    private void StartSpawning(bool b)
-    {
-        foreach (BulletSpawner spawner in spawners)
+        enemyManager.StopAllEnemies();
+        
+        if (b)
         {
-            spawner.StartSpawning(b);
-        } 
+            StartCoroutine(DoGameComplete());
+        }
+        else
+        {
+            StartCoroutine(DoGameFail());
+        }
     }
-    
+
     /// <summary>
     /// Game complete sequence
     /// </summary>
@@ -229,8 +160,6 @@ public class GameManager : MonoBehaviour
     /// <returns></returns>
     private IEnumerator DoStartCountdown()
     {
-        StartSpawning(false);
-        
         // make sure the countdown text is active
         countdownText.gameObject.SetActive(true);
         countdownText.text = "3";
@@ -242,8 +171,10 @@ public class GameManager : MonoBehaviour
         countdownText.text = "Begin";
         yield return new WaitForSeconds(1f);
         countdownText.gameObject.SetActive(false);
-        StartSpawning(true);
 
+        // If you want to move StartAllEnemies() into gameStart,
+        // go ahead.
+        enemyManager.StartAllEnemies();
         gameStart?.Invoke();
     }
 }

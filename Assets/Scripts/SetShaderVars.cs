@@ -5,9 +5,9 @@ public class SetShaderVars : MonoBehaviour
 {
     [SerializeField] FullScreenPassRendererFeature feature;
 
+    private const float DEFAULT_CHROMATIC_VAL = 0.002f;
     // Sets the variables for the shaders
-
-    // Get needed references
+    
     public void SetChromatic(float val)
     {
         feature.passMaterial.SetFloat("_Blur_Offset", val);
@@ -15,6 +15,6 @@ public class SetShaderVars : MonoBehaviour
 
     public void ResetChromatic()
     {
-        feature.passMaterial.SetFloat("_Blur_Offset", 0.002f);
+        feature.passMaterial.SetFloat("_Blur_Offset", DEFAULT_CHROMATIC_VAL);
     }
 }
