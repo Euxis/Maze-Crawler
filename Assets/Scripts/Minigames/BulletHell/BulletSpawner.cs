@@ -7,6 +7,8 @@ using Random = UnityEngine.Random;
 
 public class BulletSpawner : MonoBehaviour
 {
+    [Obsolete]
+    
     [Header("Bullet Settings")]
     public GameObject bulletPrefab;
     [SerializeField] private float bulletSpeed = 5f;

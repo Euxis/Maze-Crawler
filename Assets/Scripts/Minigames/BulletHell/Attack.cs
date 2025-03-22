@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.Serialization;
 
 /// <summary>
 /// Base class for all types of attacks
@@ -15,6 +14,7 @@ public class Attack : MonoBehaviour
     {
         Setup();
         
+        lifetimeSeconds = Mathf.Clamp(lifetimeSeconds, 0f, lifetimeSeconds);
         // Destroy bullet after lifetime expires
         Destroy(gameObject, lifetimeSeconds);
     }
@@ -24,5 +24,9 @@ public class Attack : MonoBehaviour
     /// </summary>
     protected virtual void Setup() { }
     
+    /// <summary>
+    /// Set attack live
+    /// </summary>
+    /// <param name="direction">Direction of attack</param>
     public virtual void Launch(Vector2 direction) { }
 }

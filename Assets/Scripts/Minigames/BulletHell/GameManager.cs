@@ -172,6 +172,8 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         countdownText.gameObject.SetActive(false);
 
+        // If you want to move StartAllEnemies() into gameStart,
+        // go ahead.
         enemyManager.StartAllEnemies();
         gameStart?.Invoke();
     }
