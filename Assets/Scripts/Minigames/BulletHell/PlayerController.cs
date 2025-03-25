@@ -13,12 +13,6 @@ public class PlayerController : MonoBehaviour
     public float hurtSpeed = 3f;    // Speed when player is in invincibility window
     public int maxLives = 3;
     public int currentLives;
-    
-    [Header("Gameplay Area")]
-    public float minX = -8f;
-    public float maxX = 8f;
-    public float minY = -4f;
-    public float maxY = 4f;
 
     [Header("Input")] 
     private float horizontalInput;
@@ -39,8 +33,6 @@ public class PlayerController : MonoBehaviour
     // Sprite renderer things
     [SerializeField] private SpriteRenderer spriteRendererPlayer;
     private Color colorPlayer;
-    // Transparency for when the player is invincible after being hit
-    private float invincibleAlphaVal = 0.5f;
     
     // Add invincibility window when player gets hit
     [SerializeField] private bool isInvincible = false;
@@ -98,7 +90,6 @@ public class PlayerController : MonoBehaviour
     /// <param name="context"></param>
     public void Movement(InputAction.CallbackContext context)
     {
-        
         Vector2 input = context.ReadValue<Vector2>();
         
         // Get X and Y axis of input
@@ -107,24 +98,8 @@ public class PlayerController : MonoBehaviour
         
         movement = new Vector2(horizontalInput, verticalInput);
         
-        /*
-        // Normalize diagonal movement
-        if (movement.magnitude > 1)
-        {
-            
-        }
-        */
-        
         movement.Normalize();
         rbPlayer.linearVelocity = movement * moveSpeed;
-        
-        // Clamp position to gameplay area
-        /*
-        playerPosition = rbPlayer.position;
-        playerPosition.x = Mathf.Clamp(playerPosition.x, minX, maxX);
-        playerPosition.y = Mathf.Clamp(playerPosition.y, minY, maxY);
-        rbPlayer.position = playerPosition;
-        */
     }
 
     /// <summary>
@@ -141,6 +116,12 @@ public class PlayerController : MonoBehaviour
             TakeDamage();
         }
     }
+    
+    private void SetInvulnerability(bool state)
+    {
+        gameObject.layer = state ? LayerMask.NameToLayer("PlayerInvuln") : LayerMask.NameToLayer("Default");
+    }
+
     
     /// <summary>
     /// Decrease current amount of lives and start invincibility window.
@@ -204,8 +185,10 @@ public class PlayerController : MonoBehaviour
     private IEnumerator DamageCooldown()
     {
         MediatorScript.instance.setShaderVars.SetChromatic(0.007f);
-        spriteRendererPlayer.color = new Color(Color.red.r, Color.red.g, Color.red.b, invincibleAlphaVal);
+        spriteRendererPlayer.color = Color.red;
         isInvincible = true;
+        //SetInvulnerability(true);
+
         
         // Slow down the player
         var tmp = moveSpeed;
@@ -214,9 +197,11 @@ public class PlayerController : MonoBehaviour
         yield return new WaitForSeconds(2.0f);
         spriteRendererPlayer.color = colorPlayer;
         
+        //SetInvulnerability(false);
         // Resume normal speed
         MediatorScript.instance.setShaderVars.ResetChromatic();
         isInvincible = false;
+
         moveSpeed = tmp;
     }
 }
