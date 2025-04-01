@@ -4,12 +4,13 @@ using UnityEngine.InputSystem;
 public class PlayerMovement : MonoBehaviour
 {
     [SerializeField] private GameObject objPlayer;
+    
+    [Header("Scripts")]
     [SerializeField] private MazeGenerate mazeScript;
     [SerializeField] private SoundManager soundManager;
-    
-    private Vector2 nextPosition;       // Unused
-    public Vector2 lastPosition;
-    [SerializeField]  Vector2 gridPosition;       // stores player position according to grid
+
+    private Vector2 lastPosition;
+    private Vector2 gridPosition;       // stores player position according to grid
     private bool canInterp = true;
     
     /// <summary>
@@ -21,7 +22,6 @@ public class PlayerMovement : MonoBehaviour
     {
         gridPosition = mazeScript.startPoint;
         objPlayer.transform.position = mazeScript.startPoint;
-        nextPosition = objPlayer.transform.position;
     }
 
     /// <summary>

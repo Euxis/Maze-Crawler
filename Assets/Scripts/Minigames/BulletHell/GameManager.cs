@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour
         // Just go back to maze scene for now
         
         ClearGame();
-        MediatorScript.instance.RewardPoints(1);
+        MediatorScript.instance.RewardPoints(2000); // Just do 2000 points for now
         MediatorScript.instance.BulletHellToMaze();
     }
 

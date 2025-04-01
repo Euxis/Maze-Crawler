@@ -8,45 +8,53 @@ using UnityEngine.SceneManagement;
 public class Points : MonoBehaviour
 {
     // Get reference to points UI text
+    [Header("UI Elements")]
     [SerializeField] private TMP_Text points;
     [SerializeField] private TMP_Text HP;
     [SerializeField] private TMP_Text gameOver;
     [SerializeField] private TMP_Text gameComplete;
-    
     [SerializeField] private TMP_Text bitReward;
-    [SerializeField] private GameObject UI_Parent;
-
     [SerializeField] private TMP_Text bitRewardUI;
+    [SerializeField] private GameObject UI_Parent;
     
     private int pointCount;
     private int HPCount;
 
+    [Header("Player parameters")]
     [SerializeField] private GameObject objPlayer;
     [SerializeField] private PlayerMovement playerMovement;
+    
+    private ScoreManager scoreManager;
+    private HealthManager healthManager;
+    private MazeTimer mazeTimer;
+    
+    private bool firstGame = true;
+
+    private void Awake()
+    {
+        scoreManager = GetComponent<ScoreManager>();   
+        healthManager = GetComponent<HealthManager>();
+        mazeTimer = GetComponent<MazeTimer>();    
+    }
 
     private void Start()
     {
         gameComplete.gameObject.SetActive(false);
         gameOver.gameObject.SetActive(false);
-        HPCount = 3;
+        healthManager.SetHealth(3);
         pointCount = 0;
     }
 
-    // Checks state of game. If the player has 0 lives left, game over.
-    // If they have sufficient number of points, they win!
+    /// <summary>
+    /// Checks the state of the game.
+    /// Updates health text color and if health leq 0, initiate game over.
+    /// </summary>
     private void StateCheck()
     {
-        if (pointCount == 10)
-        {
-            // Start game complete
-            if(SceneManager.GetSceneByName("BulletHell").IsValid()) SceneManager.UnloadSceneAsync(3);
-            gameObject.SetActive(true);
+        
+        if(healthManager.GetHealth() == 3) MediatorScript.instance.setShaderVars.ResetChromatic();
 
-            StartCoroutine(DoGameFinish());
-        }
-        if(HPCount == 3) MediatorScript.instance.setShaderVars.ResetChromatic();;
-
-        if (HPCount <= 0)
+        if (healthManager.IsHealthZero())
         {
             // Send game over event
             SceneManager.UnloadSceneAsync(3);
@@ -55,17 +63,16 @@ public class Points : MonoBehaviour
             StartCoroutine(DoGameOver());
         }
 
-        if (HPCount == 2)
+        if (healthManager.GetHealth() ==2)
         {
             MediatorScript.instance.setShaderVars.SetChromatic(0.007f);
-            HP.color = Color.yellow;
+            healthManager.SetTextColor(Color.yellow);
             objPlayer.GetComponent<SpriteRenderer>().color = Color.yellow;
         }
-        else if (HPCount == 1)
+        else if (healthManager.GetHealth() == 1)
         {
             MediatorScript.instance.setShaderVars.SetChromatic(0.01f);
-
-            HP.color = Color.red;
+            healthManager.SetTextColor(Color.red);
             objPlayer.GetComponent<SpriteRenderer>().color = Color.red;
         }
     }
@@ -74,29 +81,37 @@ public class Points : MonoBehaviour
     {
         if (context.performed)
         {
-            AddPoints(1);
+            scoreManager.AddPoints(2000);
+            StateCheck();
         }
+        if (firstGame)
+        {
+            mazeTimer.RemoveGracePeriod();
+            firstGame = false;
+        }
+        
     }
 
     public void AddPoints(int p)
     {
-        pointCount += p;
-        points.text = pointCount.ToString() + "/10";
+        scoreManager.AddPoints(p);
         
         // Spawn point text
         Instantiate(bitReward, objPlayer.transform.position, Quaternion.identity, UI_Parent.transform);
         Instantiate(bitRewardUI, points.transform.position, Quaternion.identity, points.transform);
-        
-        //prefab.gameObject.GetComponent<Animation>().Play("upwards");
-        if (pointCount > 10)
+        if (firstGame)
         {
-            pointCount = 10;
-            return;
+            mazeTimer.RemoveGracePeriod();
+            firstGame = false;
         }
         StateCheck();
     }
-
-    private IEnumerator DoGameOver()
+    
+    /// <summary>
+    /// Game over screen.
+    /// </summary>
+    /// <returns></returns>
+    public IEnumerator DoGameOver()
     {
         foreach(var obj in PrefabMinigame.Nodes)
         {
@@ -107,7 +122,11 @@ public class Points : MonoBehaviour
         yield return new WaitForSeconds(5f);
         SceneManager.LoadScene(0);
     }
-
+    
+    /// <summary>
+    /// Obselete, there is no win screen now.
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator DoGameFinish()
     {
         MediatorScript.instance.setShaderVars.ResetChromatic();
@@ -122,12 +141,16 @@ public class Points : MonoBehaviour
         SceneManager.LoadScene(0);
     }
 
+    public void StartGameOver()
+    {
+        StartCoroutine(DoGameOver());
+    }
+
     public void RemoveLife()
     {
-        HPCount--;
+        healthManager.DeductHealth(1);
         StateCheck();
         playerMovement.ReturnLastPosition();
-        HP.text = HPCount.ToString();
     }
 
 }
