@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     // Audio manager
     [SerializeField] private BulletHellAudioManager bulletHellAudio;
     [SerializeField] private EnemyManager enemyManager;
-    
+    [SerializeField] private PlayerController playerController;
     // Byte Spawner
     [SerializeField] private ByteSpawner _byteSpawner;
 
@@ -68,7 +68,7 @@ public class GameManager : MonoBehaviour
     private bool CheckValidPosition(Vector2 position)
     {
         // Check for bullet spawners occupying the space
-        var result = Physics2D.OverlapCircle(position, 1.0f, 
+        var result = Physics2D.OverlapCircle(position, 1.5f, 
             LayerMask.GetMask("BulletSpawner"));
 
         var free = !(result && result.CompareTag("BulletSpawner") && position == Vector2.zero);
@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
     private void MakeBulletSpawners()
     {
         // Spawn between 4-5 enemies
-        var numberOfSpawners = Random.Range(3, 5);
+        var numberOfSpawners = Random.Range(5, 8);
         enemySpawner.SpawnRandomEnemies(numberOfSpawners, 
             lowerBounds, upperBounds, 
             CheckValidPosition);
@@ -162,6 +162,10 @@ public class GameManager : MonoBehaviour
     {
         // make sure the countdown text is active
         countdownText.gameObject.SetActive(true);
+        
+        // set player to active so they can preposition
+        playerController.CanStart(true);
+        
         countdownText.text = "3";
         yield return new WaitForSeconds(1f);
         countdownText.text = "2";

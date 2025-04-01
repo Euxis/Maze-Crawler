@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 
 
@@ -15,6 +16,7 @@ public class MinigameManager : MonoBehaviour
     
     private PlayerMovement mazePlayer;
 
+    [SerializeField]
     private Color minigameColor;
     
     [SerializeField]
@@ -48,20 +50,28 @@ public class MinigameManager : MonoBehaviour
         // if the current minigame touched is different from the previous minigame, re-enable the collider
         if (lastMinigame && lastMinigame != minigame)
         {
-            lastMinigame.GetComponent<Collider2D>().enabled = true;
+            SetNodeColor(lastMinigame, true);
         }
         lastMinigame = minigame;
-
-        // disable collider of minigame if the player fails, so they don't reenter the game
-        minigame.GetComponent<Collider2D>().enabled = false;
-        //minigame.GetComponent<SpriteRenderer>().color = Color.white;
+        
+        SetNodeColor(minigame, false);
         
         // pass object to mediator
         MediatorScript.instance.GetMinigame(minigame);
-        
-        
     }
-    
+
+    /// <summary>
+    /// Disables or enables a node
+    /// </summary>
+    /// <param name="node"></param>
+    /// <param name="state"></param>
+    private void SetNodeColor(GameObject node, bool state)
+    {
+        node.GetComponent<Collider2D>().enabled = state;
+        node.GetComponent<SpriteRenderer>().color = state ? minigameColor : Color.grey;
+        node.GetComponentInChildren<Light2D>().enabled = state;
+    }
+
     // Load shooter minigame
     public void LoadMinigame()
     {

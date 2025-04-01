@@ -13,9 +13,8 @@ GameObject:
   - component: {fileID: 8158754801099065232}
   - component: {fileID: 8676561186302379002}
   - component: {fileID: 4624788395096161238}
-  - component: {fileID: 1631636369770952864}
-  m_Layer: 3
-  m_Name: Bullet
+  m_Layer: 0
+  m_Name: Homing Bullet
   m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -81,7 +80,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 3625043607559282579, guid: 19fb86013d8c24d6cb8410c0aadf30fa, type: 3}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0, g: 0.032790184, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -230,7 +229,7 @@ TrailRenderer:
       m_RotationOrder: 4
     colorGradient:
       serializedVersion: 2
-      key0: {r: 1, g: 0, b: 0, a: 1}
+      key0: {r: 0, g: 0.04705883, b: 1, a: 1}
       key1: {r: 1, g: 1, b: 1, a: 0}
       key2: {r: 0, g: 0, b: 0, a: 0}
       key3: {r: 0, g: 0, b: 0, a: 0}
@@ -270,21 +269,3 @@ TrailRenderer:
   m_Autodestruct: 0
   m_Emitting: 1
   m_ApplyActiveColorSpace: 1
---- !u!114 &1631636369770952864
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3887275174052623808}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4a1e329fc52809949a06ce41b979ae6d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  attackId: normal
-  lifetimeSeconds: 5
-  rb: {fileID: 8158754801099065232}
-  initialSpeed: 5
-  trail: {fileID: 4624788395096161238}
-  bulletColor: {r: 1, g: 0, b: 0, a: 1}

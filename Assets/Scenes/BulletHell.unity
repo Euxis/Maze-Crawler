@@ -236,6 +236,7 @@ MonoBehaviour:
         m_CallState: 2
   bulletHellAudio: {fileID: 150504652}
   enemyManager: {fileID: 1299918555}
+  playerController: {fileID: 1504576951}
   _byteSpawner: {fileID: 150504654}
   prefabParent: {fileID: 2147312875}
   enemySpawner: {fileID: 504530358}
@@ -3873,10 +3874,6 @@ MonoBehaviour:
   hurtSpeed: 3
   maxLives: 3
   currentLives: 0
-  minX: -8
-  maxX: 8
-  minY: -4
-  maxY: 4
   hitEffect: {fileID: 0}
   hitSound: {fileID: 0}
   rbPlayer: {fileID: 1504576948}

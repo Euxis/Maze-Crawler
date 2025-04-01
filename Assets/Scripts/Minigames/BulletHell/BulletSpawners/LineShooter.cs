@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class LineShooter : EnemyBase
 {
@@ -13,6 +14,7 @@ public class LineShooter : EnemyBase
     {
         // Get main attack "normal"
         mainAttack = GetAttackPrefab("normal");
+        fireRateSeconds = Random.Range(0.5f, 2f);
     }
 
     protected override void Attack(Attack bulletPrefab, 
