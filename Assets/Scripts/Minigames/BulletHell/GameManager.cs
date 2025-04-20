@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -15,15 +16,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TMP_Text completeText; // Game complete text
 
     public UnityEvent gameOverEvent;    // Stops game objects and returns to maze
-    public UnityEvent gameStart;        // Starts all game objects in the scene
+    public UnityEvent gameStart;        // Starts all game objects in the scene. Obselete
+    public UnityAction gameStartAction; // New game start event
 
     // Audio manager
+    [Header("Game Control")]
     [SerializeField] private BulletHellAudioManager bulletHellAudio;
     [SerializeField] private EnemyManager enemyManager;
     [SerializeField] private PlayerController playerController;
     // Byte Spawner
     [SerializeField] private ByteSpawner _byteSpawner;
-
     [SerializeField] private GameObject prefabParent;
     [SerializeField] private EnemySpawner enemySpawner;
     
@@ -31,6 +33,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Vector2 lowerBounds;
     [SerializeField] private Vector2 upperBounds;
     [SerializeField] private GameObject playerObject;
+
+    [Header("Timer Settings")] [SerializeField]
+    private float timerSeconds;
     
     // Position of spawners
     private int positionX;
@@ -59,6 +64,58 @@ public class GameManager : MonoBehaviour
         // Start the countdown
         StartCoroutine(DoStartCountdown());
     }
+    
+    public void StartGame(String mode)
+    {
+        // If survive gamemode, add timer to start event
+        if (mode == "survive")
+        {
+            gameStartAction += StartTimer;
+        }
+        // If collect gamemode, add byte spawner to start event
+        else if (mode == "collect")
+        {
+            gameStartAction += SpawnBits;
+        }
+        else if (mode == "destroy")
+        {
+            // would add thing here to enable destroy gamemode
+        }
+
+        gameStartAction += CanStart;
+        gameStartAction += StartMusic;
+        
+        MediatorScript.instance.setShaderVars.ResetChromatic();
+        // Initialize UI
+        gameOverPanel.SetActive(false);
+        
+        MakeBulletSpawners();
+        enemyManager.SetEnemiesTarget(playerObject);
+        
+        
+        // Start the countdown
+        StartCoroutine(DoStartCountdown());
+    }
+
+    private void StartTimer()
+    {
+        gameObject.GetComponent<Timer>().StartTimer(timerSeconds);
+    }
+
+    private void SpawnBits()
+    {
+        gameObject.GetComponent<ByteSpawner>().MakeBytes();
+    }
+
+    private void CanStart()
+    {
+        FindAnyObjectByType<PlayerController>().CanStart(true);
+    }
+
+    private void StartMusic()
+    {
+        FindAnyObjectByType<BulletHellAudioManager>().StartMusic();
+    }
 
     private void Update()
     {
@@ -81,7 +138,7 @@ public class GameManager : MonoBehaviour
     private void MakeBulletSpawners()
     {
         // Spawn between 4-5 enemies
-        var numberOfSpawners = Random.Range(5, 8);
+        var numberOfSpawners = Random.Range(5, 6);
         enemySpawner.SpawnRandomEnemies(numberOfSpawners, 
             lowerBounds, upperBounds, 
             CheckValidPosition);
@@ -179,6 +236,6 @@ public class GameManager : MonoBehaviour
         // If you want to move StartAllEnemies() into gameStart,
         // go ahead.
         enemyManager.StartAllEnemies();
-        gameStart?.Invoke();
+        gameStartAction?.Invoke();
     }
 }

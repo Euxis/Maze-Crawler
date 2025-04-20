@@ -5,6 +5,7 @@ public class HomingBullet : Attack
 {
     public float AdditionalSpeed { get; set; }
     [SerializeField] private float initialSpeed;
+    [SerializeField] private float trackingSpeed;
     
     private SpriteRenderer spriteRenderer;
     
@@ -37,6 +38,8 @@ public class HomingBullet : Attack
     public void FollowTarget(GameObject target)
     {
         if(target==null)return;
+        
+        
         
         spriteRenderer.color = homingColor;
         trailRenderer.startColor = homingColor;

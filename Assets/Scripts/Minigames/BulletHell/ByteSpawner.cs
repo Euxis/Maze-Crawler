@@ -19,7 +19,7 @@ public class ByteSpawner : MonoBehaviour
         for (int i = 0; i <= numberofBytes; i++)
         {
             RandomizeSpawn();
-            //Instantiate(bytePrefab, new Vector2(positionX, positionY), Quaternion.identity, prefabParent.transform);
+            Instantiate(bytePrefab, new Vector2(positionX, positionY), Quaternion.identity, prefabParent.transform);
         }
 
         // clear list when done

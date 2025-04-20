@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 
 public class MinigameManager : MonoBehaviour
@@ -11,6 +12,8 @@ public class MinigameManager : MonoBehaviour
     public static MinigameManager instance;
     [SerializeField] private GameObject objMazeScene;   // The parent empty of the maze scene
     [SerializeField] private MazeTimer mazeTimer;
+
+    private String[] minigameTags = { "survive", "collect" };
 
     private GameObject touchedMinigame;
     private GameObject lastMinigame;
@@ -77,6 +80,10 @@ public class MinigameManager : MonoBehaviour
     // Load shooter minigame
     public void LoadMinigame()
     {
-        MediatorScript.instance.MazeToBulletHell();
+        var random = Random.Range(0,minigameTags.Length);
+        
+        // Randomize bullet hell type
+        //MediatorScript.instance.MazeToBulletHell(minigameTags[random]);
+        MediatorScript.instance.MazeToBulletHell("survive");
     }
 }

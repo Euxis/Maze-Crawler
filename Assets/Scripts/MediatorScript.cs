@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class MediatorScript : MonoBehaviour
 {
+    // TODO: Make a delegate to activate/deactivate list of objects in it. Filter what it does based on type
+    
     // This script handles cross scene communication
     private int wonPoints = 0;
     
@@ -83,13 +85,13 @@ public class MediatorScript : MonoBehaviour
 
     private void Start()
     {
-        // Get all the references needed
+        //Get all the references needed
         maze_SceneObject = GameObject.FindWithTag("MazeScene");
         bulletHell_SceneObject = GameObject.FindWithTag("BulletScene");
          
         bulletHell_ControlManager = GameObject.FindWithTag("BulletControl");
         bulletHell_GameManager = GameObject.FindWithTag("BulletGame");
- 
+        
         maze_ControlManager = GameObject.FindWithTag("MazeControl");
         maze_GameManager = GameObject.FindWithTag("MazeGame");
          
@@ -98,8 +100,8 @@ public class MediatorScript : MonoBehaviour
         
         maze_AudioListener = maze_Camera.GetComponent<AudioListener>();
         bulletHell_AudioListener = bulletHell_Camera.gameObject.GetComponent<AudioListener>();
- 
-        pointsScript = maze_GameManager.GetComponent<Points>();
+        
+        pointsScript = GameObject.FindFirstObjectByType<Points>();
         
         setShaderVars = this.gameObject.GetComponent<SetShaderVars>();
         
@@ -115,8 +117,7 @@ public class MediatorScript : MonoBehaviour
 
     private void DisableBulletHell()
     {
-        var bulletHell_AudioListener = bulletHell_Camera.GetComponent<AudioListener>();
-        bulletHell_AudioListener.enabled = false;
+        bulletHell_Camera.GetComponent<AudioListener>().enabled = false;
         bulletHell_GameManager.SetActive(false);
         bulletHell_ControlManager.SetActive(false);
         bulletHell_SceneObject.SetActive(false);
@@ -154,36 +155,98 @@ public class MediatorScript : MonoBehaviour
     }
 
     // Method to load and unload given scenes
-    public void MazeToBulletHell()
+    public void MazeToBulletHell(String mode)
     {
+        SwitchScene(true);
         // Disable gameObjects in the maze scene
-        maze_AudioListener.enabled = false;
-        maze_GameManager.SetActive(false);
-        maze_ControlManager.SetActive(false);
-        maze_SceneObject.SetActive(false);
-        
-        // Enable objects in bullethell
-        bulletHell_AudioListener.enabled = true;
-        bulletHell_ControlManager.SetActive(true);
-        bulletHell_GameManager.SetActive(true);
-        bulletHell_SceneObject.SetActive(true);
+        // maze_AudioListener.enabled = false;
+        // maze_GameManager.SetActive(false);
+        // maze_ControlManager.SetActive(false);
+        // maze_SceneObject.SetActive(false);
+        //
+        // // Enable objects in bullethell
+        // bulletHell_AudioListener.enabled = true;
+        // bulletHell_ControlManager.SetActive(true);
+        // bulletHell_GameManager.SetActive(true);
+        // bulletHell_SceneObject.SetActive(true);
         
         // Start the bullethell game
-        bulletHell_GameManager.GetComponent<GameManager>().StartGame();
+        bulletHell_GameManager.GetComponent<GameManager>().StartGame(mode);
+    }
+
+    /// <summary>
+    /// Sets either BH scene active/inactive and maze the opposite
+    /// </summary>
+    /// <param name="b">Is BH active</param>
+    public void SwitchScene(bool b)
+    {
+        // Disable main gameObjects in bullethell
+        bulletHell_AudioListener.enabled = b;
+        bulletHell_GameManager.SetActive(b);
+        bulletHell_ControlManager.SetActive(b);
+        bulletHell_SceneObject.SetActive(b);
+        
+        // Enable gameObjects in the maze scene
+        maze_AudioListener.enabled = !b;
+        maze_GameManager.SetActive(!b);
+        maze_ControlManager.SetActive(!b);
+        maze_SceneObject.SetActive(!b);
     }
 
     public void BulletHellToMaze()
     {
-        // Disable main gameObjects in bullethell
-        bulletHell_AudioListener.enabled = false;
-        bulletHell_GameManager.SetActive(false);
-        bulletHell_ControlManager.SetActive(false);
-        bulletHell_SceneObject.SetActive(false);
-        
-        // Enable gameObjects in the maze scene
-        maze_AudioListener.enabled = true;
-        maze_GameManager.SetActive(true);
-        maze_ControlManager.SetActive(true);
-        maze_SceneObject.SetActive(true);
+        SwitchScene(false);
+        // // Disable main gameObjects in bullethell
+        // bulletHell_AudioListener.enabled = false;
+        // bulletHell_GameManager.SetActive(false);
+        // bulletHell_ControlManager.SetActive(false);
+        // bulletHell_SceneObject.SetActive(false);
+        //
+        // // Enable gameObjects in the maze scene
+        // maze_AudioListener.enabled = true;
+        // maze_GameManager.SetActive(true);
+        // maze_ControlManager.SetActive(true);
+        // maze_SceneObject.SetActive(true);
+    }
+    
+    /// <summary>
+    /// Switch scene based off of tag passed.
+    /// </summary>
+    /// <param name="from">The tag to deactivate</param>
+    /// <param name="to">The tag to activate</param>
+    public void SwitchScene(String from, String to)
+    {
+        GameObject[] fromObj = GameObject.FindGameObjectsWithTag(from);
+        GameObject[] toObj = GameObject.FindGameObjectsWithTag(to);
+        foreach (GameObject obj in fromObj)
+        {
+            // If the gameobject is the camera, deactivate the audiolistenter
+            if (TryGetComponent<AudioListener>(out AudioListener cam))
+            {
+                cam.enabled = false;
+            }
+            else
+            {
+                obj.SetActive(false);
+            }
+        }
+
+        foreach (GameObject obj in toObj)
+        {
+            if (TryGetComponent<AudioListener>(out AudioListener cam))
+            {
+                cam.enabled = true;
+            }
+            else
+            {
+                obj.SetActive(true);
+            }
+
+            if (TryGetComponent<GameManager>(out GameManager gm))
+            {
+                gm.StartGame();
+            }
+
+        }
     }
 }

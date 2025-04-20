@@ -19,6 +19,8 @@ public class MazeGenerate : MonoBehaviour
     private const bool Passage = false;
     private const int minigameSpawnChance = 4;
     
+    private bool hasAddedGate = false;  // Make sure that the maze always has a gate to proceed to the next level
+    
     // minigame node prefab
     [SerializeField] private GameObject minigamePrefab;
 
@@ -231,7 +233,12 @@ public class MazeGenerate : MonoBehaviour
             // If there is more than one passage, then don't add a minigame node
             if (passageCount > 1)
                 continue;
-            
+
+            if (!hasAddedGate)
+            {
+                Debug.Log(string.Format("Placed gate at {0}, {1}", row, col));
+            }
+
             // otherwise, add the coordinates of the tile to the minigame array
             minigameCells.Add((row, col));
         }

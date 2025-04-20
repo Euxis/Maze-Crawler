@@ -16,6 +16,7 @@ TagManager:
   - BulletScene
   - BulletSpawner
   - BulletHellPrefab
+  - BulletCollect
   layers:
   - Default
   - TransparentFX
@@ -26,7 +27,7 @@ TagManager:
   - Wall
   - BulletSpawner
   - PlayerInvuln
-  - 
+  - BH_Coin
   - 
   - 
   - 

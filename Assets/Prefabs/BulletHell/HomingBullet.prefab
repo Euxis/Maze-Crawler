@@ -286,7 +286,7 @@ MonoBehaviour:
   attackId: homing
   lifetimeSeconds: 3
   rb: {fileID: 8158754801099065232}
-  initialSpeed: 4
+  initialSpeed: 2.5
   normalColor: {r: 1, g: 0, b: 0, a: 1}
   homingColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   trailRenderer: {fileID: 4624788395096161238}
