@@ -64,6 +64,31 @@ public class PlayerController : MonoBehaviour
         this.enabled = false;
     }
 
+    /// <summary>
+    /// Takes String s for current gamemode and changes players stats depending on it.
+    /// </summary>
+    /// <param name="s">The gamemode. Either "survive" or "collect"</param>
+    public void UpdateStatsForMode(String s)
+    {
+        if (s == "survive")
+        {
+            maxLives = 3;
+        }
+        else if (s == "collect")
+        {
+            maxLives = 5;
+        }
+        // Default is 3 HP
+        else
+        {
+            maxLives = 3;
+        }
+
+        currentLives = maxLives;
+        gameManager.UpdateLivesUI(currentLives, maxLives);
+
+    }
+
     public void ResetStats()
     {
         rbPlayer.gameObject.transform.position = Vector2.zero;

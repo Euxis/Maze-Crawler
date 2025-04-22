@@ -67,6 +67,8 @@ public class GameManager : MonoBehaviour
         // Store mode for goal setting
         gamemode = mode;
         
+        playerController.UpdateStatsForMode(gamemode);
+        
         if (mode == "survive")
         {
             // Make sure there's only one start timer subscribed
