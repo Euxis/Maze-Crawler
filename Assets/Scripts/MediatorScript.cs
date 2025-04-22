@@ -149,27 +149,37 @@ public class MediatorScript : MonoBehaviour
     {
         if (!maze_GameManager) return;
         pointsScript.RemoveLife();
-        
-
     }
 
-    // Method to load and unload given scenes
-    public void MazeToBulletHell()
+    public void MazeToBulletHell(bool b, String mode)
     {
-        // Disable gameObjects in the maze scene
-        maze_AudioListener.enabled = false;
-        maze_GameManager.SetActive(false);
-        maze_ControlManager.SetActive(false);
-        maze_SceneObject.SetActive(false);
+        maze_AudioListener.enabled = !b;
+        maze_GameManager.SetActive(!b);
+        maze_ControlManager.SetActive(!b);
+        maze_SceneObject.SetActive(!b);
+
+        bulletHell_AudioListener.enabled = b;
+        bulletHell_ControlManager.SetActive(b);
+        bulletHell_GameManager.SetActive(b);
+        bulletHell_SceneObject.SetActive(b);
+
+        if (b) bulletHell_GameManager.GetComponent<GameManager>().StartGame(mode);
+    }
+    
+    public void MazeToBulletHell(bool b)
+    {
         
-        // Enable objects in bullethell
-        bulletHell_AudioListener.enabled = true;
-        bulletHell_ControlManager.SetActive(true);
-        bulletHell_GameManager.SetActive(true);
-        bulletHell_SceneObject.SetActive(true);
+        bulletHell_AudioListener.enabled = b;
+        bulletHell_ControlManager.SetActive(b);
+        bulletHell_GameManager.SetActive(b);
+        bulletHell_SceneObject.SetActive(b);
         
-        // Start the bullethell game
-        bulletHell_GameManager.GetComponent<GameManager>().StartGame();
+        maze_AudioListener.enabled = !b;
+        maze_GameManager.SetActive(!b);
+        maze_ControlManager.SetActive(!b);
+        maze_SceneObject.SetActive(!b);
+
+        
     }
 
     public void BulletHellToMaze()
