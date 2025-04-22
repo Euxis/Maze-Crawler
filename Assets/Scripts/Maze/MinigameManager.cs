@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using Random = UnityEngine.Random;
 
 
 public class MinigameManager : MonoBehaviour
@@ -22,6 +23,8 @@ public class MinigameManager : MonoBehaviour
     [SerializeField]
     private SoundManager soundManager;
 
+    private String[] modes = { "survive", "collect" };
+
     
     // Create a singleton minigame manager
     private void Awake()
@@ -29,13 +32,7 @@ public class MinigameManager : MonoBehaviour
         if (instance == null) instance = this;
 
     }
-
-    private void Start()
-    {
-        //soundManager.PlayBGM();
-
-    }
-
+    
     public void Quit(InputAction.CallbackContext context)
     {
         if(context.performed) Application.Quit();
@@ -75,6 +72,8 @@ public class MinigameManager : MonoBehaviour
     // Load shooter minigame
     public void LoadMinigame()
     {
-        MediatorScript.instance.MazeToBulletHell();
+        // Determine what mode to start in by random chance
+        int random = Random.Range(0, modes.Length) % modes.Length;
+        MediatorScript.instance.MazeToBulletHell(true, modes[random]);
     }
 }

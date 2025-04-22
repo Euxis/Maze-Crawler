@@ -7,23 +7,38 @@ public class ByteSpawner : MonoBehaviour
     private int positionX, positionY;
 
     [SerializeField] private GameObject bytePrefab;
+    [SerializeField] private ByteManager byteManager;
+    
     private GameObject prefabParent;
+    private int numberofBytes;
     
     // Spawn bytes spread throughout scene
     public void MakeBytes()
     {
         prefabParent = GameObject.FindGameObjectWithTag("BulletHellPrefab");
+        
         // randomize amount of bytes to spawn
-        int numberofBytes = Random.Range(3, 4);
+        numberofBytes = Random.Range(3, 4);
+        
+        // pass max byte amount to byte manager
+        byteManager.SetMaxBytes(numberofBytes+1);
 
         for (int i = 0; i <= numberofBytes; i++)
         {
             RandomizeSpawn();
-            //Instantiate(bytePrefab, new Vector2(positionX, positionY), Quaternion.identity, prefabParent.transform);
+            Instantiate(bytePrefab, new Vector2(positionX, positionY), Quaternion.identity, prefabParent.transform);
         }
 
         // clear list when done
         spawnPoints.Clear();
+    }
+
+    /// <summary>
+    ///  Returns max number of bytes
+    /// </summary>
+    private int GetBytes()
+    {
+        return numberofBytes;
     }
 
     private void RandomizeSpawn()

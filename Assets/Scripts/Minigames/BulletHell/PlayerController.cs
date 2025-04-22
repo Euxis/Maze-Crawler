@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour
     
     [SerializeField] private GameObject objGameManager;
     [SerializeField] private GameManager gameManager;
+    [SerializeField] private ByteManager byteManager;
     
     // Sprite renderer things
     [SerializeField] private SpriteRenderer spriteRendererPlayer;
@@ -105,21 +106,23 @@ public class PlayerController : MonoBehaviour
     /// <summary>
     /// Take damage when the player hits a bullet and then delete
     /// the bullet.
+    /// Also collects bytes
     /// </summary>
     /// <param name="other"></param>
     private void OnTriggerEnter2D(Collider2D other)
     {
+        if (other.CompareTag("BulletHellByte"))
+        {
+            Destroy(other.gameObject);
+            byteManager.CollectByte();
+        }
+
         // If the player is currently invincible, don't take damage
         if (other.CompareTag("Bullet") && !isInvincible)
         {
             Destroy(other.gameObject);
             TakeDamage();
         }
-    }
-    
-    private void SetInvulnerability(bool state)
-    {
-        gameObject.layer = state ? LayerMask.NameToLayer("PlayerInvuln") : LayerMask.NameToLayer("Default");
     }
 
     

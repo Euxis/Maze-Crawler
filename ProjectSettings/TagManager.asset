@@ -16,6 +16,7 @@ TagManager:
   - BulletScene
   - BulletSpawner
   - BulletHellPrefab
+  - BulletHellByte
   layers:
   - Default
   - TransparentFX

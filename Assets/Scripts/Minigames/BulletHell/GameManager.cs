@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -11,30 +12,40 @@ public class GameManager : MonoBehaviour
     public TMP_Text livesText; // Text component to display remaining lives
     public GameObject gameOverPanel;
 
+    [Header("Text Fields")]
     [SerializeField] private TMP_Text countdownText;
     [SerializeField] private TMP_Text completeText; // Game complete text
+    [SerializeField] private TMP_Text objectiveText;
+    [SerializeField] private TMP_Text timerText, timerSecondsText;
+    [SerializeField] private TMP_Text bitsText, bitsGoalText;
+    [SerializeField] private String[] objectiveStrings = { "OBJECTIVE: SURVIVE", "OBJECTIVE: COLLECT"}; 
 
     public UnityEvent gameOverEvent;    // Stops game objects and returns to maze
     public UnityEvent gameStart;        // Starts all game objects in the scene
+    private UnityAction gameStartAction; // New more dynamic method of game start
 
-    // Audio manager
+    [Header("Manager Game Objects")]
     [SerializeField] private BulletHellAudioManager bulletHellAudio;
     [SerializeField] private EnemyManager enemyManager;
     [SerializeField] private PlayerController playerController;
-    // Byte Spawner
-    [SerializeField] private ByteSpawner _byteSpawner;
-
-    [SerializeField] private GameObject prefabParent;
+    [SerializeField] private ByteSpawner byteSpawner;
     [SerializeField] private EnemySpawner enemySpawner;
     
     [Header("Spawning bounds")]
     [SerializeField] private Vector2 lowerBounds;
     [SerializeField] private Vector2 upperBounds;
     [SerializeField] private GameObject playerObject;
+    [SerializeField] private GameObject prefabParent;
+    
+    [Header("Game variables")]
+    [SerializeField] public float timerDuration;
     
     // Position of spawners
     private int positionX;
     private int positionY;
+    
+    // Game mode
+    private String gamemode;
 
     /// <summary>
     /// Clears all the prefabs
@@ -46,15 +57,60 @@ public class GameManager : MonoBehaviour
         enemyManager.ClearEnemies();
     }
 
-    public void StartGame()
+    public void StartGame(String mode)
     {
         MediatorScript.instance.setShaderVars.ResetChromatic();
+        
         // Initialize UI
         gameOverPanel.SetActive(false);
+
+        // Store mode for goal setting
+        gamemode = mode;
+        
+        if (mode == "survive")
+        {
+            // Make sure there's only one start timer subscribed
+            gameStartAction -= StartTimer;
+            gameStartAction += StartTimer;
+            
+            // Unsubscribe any other game complete event
+            gameStartAction -= SpawnBits;
+            
+            // Update and display objective text
+            objectiveText.text = objectiveStrings[0];
+            
+            // Hide byte amount text and display timer
+            timerText.gameObject.SetActive(true);
+            timerSecondsText.gameObject.SetActive(true);
+            
+            bitsText.gameObject.SetActive(false);
+            bitsGoalText.gameObject.SetActive(false);
+        }
+        else if (mode == "collect")
+        {
+            // Make sure there's only one byte spawner subscribed
+            gameStartAction -= SpawnBits;
+            gameStartAction += SpawnBits;
+            
+            // Unsubscribe any other gamemode event
+            gameStartAction -= StartTimer;
+            
+            // Update objective text
+            objectiveText.text = objectiveStrings[1];
+            
+            // Hide timer text and display byte collection text
+            bitsText.gameObject.SetActive(true);
+            bitsGoalText.gameObject.SetActive(true);
+            
+            timerText.gameObject.SetActive(false);
+            timerSecondsText.gameObject.SetActive(false);
+        }
+
+        gameStartAction -= StartMusic;
+        gameStartAction += StartMusic;
         
         MakeBulletSpawners();
         enemyManager.SetEnemiesTarget(playerObject);
-        _byteSpawner.MakeBytes();
         
         // Start the countdown
         StartCoroutine(DoStartCountdown());
@@ -63,6 +119,27 @@ public class GameManager : MonoBehaviour
     private void Update()
     {
         Resources.UnloadUnusedAssets();   
+    }
+
+    /// <summary>
+    /// Method to start for survive gamemode
+    /// </summary>
+    private void StartTimer()
+    {
+        FindAnyObjectByType<Timer>().StartTimer(timerDuration);
+    }
+
+    private void StartMusic()
+    {
+        bulletHellAudio.StartMusic();
+    }
+
+    /// <summary>
+    /// Method to start for collect gamemode
+    /// </summary>
+    private void SpawnBits()
+    {
+        byteSpawner.MakeBytes();
     }
 
     private bool CheckValidPosition(Vector2 position)
@@ -136,9 +213,13 @@ public class GameManager : MonoBehaviour
         
         ClearGame();
         MediatorScript.instance.RewardPoints(1);
-        MediatorScript.instance.BulletHellToMaze();
+        MediatorScript.instance.MazeToBulletHell(false);
     }
 
+    /// <summary>
+    /// Coroutine for game fail state
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator DoGameFail()
     {
         bulletHellAudio.StopMusic();
@@ -151,7 +232,7 @@ public class GameManager : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         MediatorScript.instance.DeductLife();
-        MediatorScript.instance.BulletHellToMaze();
+        MediatorScript.instance.MazeToBulletHell(false);
     }
 
     /// <summary>
@@ -162,6 +243,9 @@ public class GameManager : MonoBehaviour
     {
         // make sure the countdown text is active
         countdownText.gameObject.SetActive(true);
+        
+        // display the objective text
+        objectiveText.gameObject.SetActive(true);
         
         // set player to active so they can preposition
         playerController.CanStart(true);
@@ -175,10 +259,9 @@ public class GameManager : MonoBehaviour
         countdownText.text = "Begin";
         yield return new WaitForSeconds(1f);
         countdownText.gameObject.SetActive(false);
-
-        // If you want to move StartAllEnemies() into gameStart,
-        // go ahead.
+        objectiveText.gameObject.SetActive(false);
+        
         enemyManager.StartAllEnemies();
-        gameStart?.Invoke();
+        gameStartAction?.Invoke();
     }
 }
