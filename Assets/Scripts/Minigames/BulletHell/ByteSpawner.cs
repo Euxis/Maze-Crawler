@@ -18,7 +18,7 @@ public class ByteSpawner : MonoBehaviour
         prefabParent = GameObject.FindGameObjectWithTag("BulletHellPrefab");
         
         // randomize amount of bytes to spawn
-        numberofBytes = Random.Range(3, 4);
+        numberofBytes = Random.Range(3, 6);
         
         // pass max byte amount to byte manager
         byteManager.SetMaxBytes(numberofBytes+1);

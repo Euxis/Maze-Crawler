@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -143,16 +144,17 @@ public class PlayerController : MonoBehaviour
         }
 
         // If the player is currently invincible, don't take damage
-        if (other.CompareTag("Bullet") && !isInvincible)
+        if (other.CompareTag("Bullet"))
         {
             Destroy(other.gameObject);
-            TakeDamage();
+            if(!isInvincible) TakeDamage();
         }
     }
 
     
     /// <summary>
     /// Decrease current amount of lives and start invincibility window.
+    /// Will also destroy nearby bullets.
     /// </summary>
     private void TakeDamage()
     {
@@ -170,6 +172,17 @@ public class PlayerController : MonoBehaviour
             audioSource.PlayOneShot(hitSound);
         }
         
+        // destroy surrounding bullets
+        var BulletList = GameObject.FindGameObjectsWithTag("Bullet");
+        foreach (var bullet in BulletList)
+        {
+            if (Vector2.Distance(bullet.transform.position, rbPlayer.transform.position) < 5f)
+            {
+                Destroy(bullet.gameObject);
+            }
+        }
+        Array.Clear(BulletList, 0, BulletList.Length);
+
         // Update UI
         gameManager.UpdateLivesUI(currentLives, maxLives);
         

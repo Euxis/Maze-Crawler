@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -13,10 +14,16 @@ public class ByteManager : MonoBehaviour
 
     public UnityEvent onGameComplete;
 
+    private void Awake()
+    {
+        
+    }
+
     public void SetMaxBytes(int i)
     {
         // Reset byte count
         currentBytes = 0;
+        currentBytesText.text = currentBytes.ToString();
         maxBytes = i;
         maxBytesText.text = maxBytes.ToString();
     }
