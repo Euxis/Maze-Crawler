@@ -33,6 +33,15 @@ public class ByteSpawner : MonoBehaviour
         spawnPoints.Clear();
     }
 
+    public void ClearAllBytes()
+    {
+        var bytesList = GameObject.FindGameObjectsWithTag("BulletHellByte");
+        foreach (var bytes in bytesList)
+        {
+            Destroy(bytes.gameObject);
+        }
+    }
+
     /// <summary>
     ///  Returns max number of bytes
     /// </summary>

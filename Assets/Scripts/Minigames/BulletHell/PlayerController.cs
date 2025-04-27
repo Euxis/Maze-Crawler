@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
     public float hurtSpeed = 3f;    // Speed when player is in invincibility window
     public int maxLives = 3;
     public int currentLives;
+    private int additionalLives = 0;
 
     [Header("Input")] 
     private float horizontalInput;
@@ -54,7 +55,7 @@ public class PlayerController : MonoBehaviour
         if (audioSource == null) audioSource = gameObject.AddComponent<AudioSource>();
         setShaderVars = FindAnyObjectByType<SetShaderVars>().GetComponent<SetShaderVars>();
         
-        currentLives = maxLives;
+        currentLives = maxLives + additionalLives;
 
         // Update UI
         gameManager.UpdateLivesUI(currentLives, maxLives);
@@ -65,6 +66,11 @@ public class PlayerController : MonoBehaviour
         this.enabled = false;
     }
 
+    public void IncreaseBaseHP(int i)
+    {
+        additionalLives += i;
+    }
+
     /// <summary>
     /// Takes String s for current gamemode and changes players stats depending on it.
     /// </summary>
@@ -73,16 +79,16 @@ public class PlayerController : MonoBehaviour
     {
         if (s == "survive")
         {
-            maxLives = 3;
+            maxLives = 3 + additionalLives;
         }
         else if (s == "collect")
         {
-            maxLives = 5;
+            maxLives = 5 + additionalLives;
         }
         // Default is 3 HP
         else
         {
-            maxLives = 3;
+            maxLives = 3 + additionalLives;
         }
 
         currentLives = maxLives;

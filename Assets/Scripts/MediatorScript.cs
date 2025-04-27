@@ -29,14 +29,23 @@ public class MediatorScript : MonoBehaviour
     [SerializeField]
     private GameObject maze_SceneObject;
     private GameObject bulletHell_SceneObject;
+    private GameObject options_SceneObject;
     
     // Referneces to all cameras
     [SerializeField]
     private Camera bulletHell_Camera;
     private Camera maze_Camera;
+    private Camera options_Camera;
     
     private AudioListener maze_AudioListener;
     private AudioListener bulletHell_AudioListener;
+
+    private SoundManager maze_AudioManager;
+    private BulletHellAudioManager bullet_AudioManager;
+
+    private GameObject options_ControlManager;
+
+    private SoundManager mazeSoundManager;
 
     private GameObject storedMinigame;
 
@@ -47,6 +56,7 @@ public class MediatorScript : MonoBehaviour
     private bool isBGM = true;
     private bool isStep = true;
     private bool isShader = true;
+    private int volume = 5;
     
     // Shader settings
     public SetShaderVars setShaderVars;
@@ -59,6 +69,18 @@ public class MediatorScript : MonoBehaviour
     public void SetBGM(bool value)
     {
         isBGM = value;
+    }
+
+    public void SetMusicVolume(int v)
+    {
+        volume = v;
+        maze_AudioManager.SetVolume(v);
+        bullet_AudioManager.SetVolume(v);
+    }
+
+    public int GetVolume()
+    {
+        return volume;
     }
 
     public bool GetStep()
@@ -79,6 +101,11 @@ public class MediatorScript : MonoBehaviour
     public void SetShader(bool value)
     {
         isShader = value;
+        ShaderSetting shaderSettingScript = FindAnyObjectByType<ShaderSetting>();
+        shaderSettingScript.ManualUpdate(value);
+        
+        CheckShaderState checkShaderScript = FindAnyObjectByType<CheckShaderState>();
+        checkShaderScript.ManualUpdate(value);
     }
 
     private void Start()
@@ -86,7 +113,8 @@ public class MediatorScript : MonoBehaviour
         // Get all the references needed
         maze_SceneObject = GameObject.FindWithTag("MazeScene");
         bulletHell_SceneObject = GameObject.FindWithTag("BulletScene");
-         
+        options_SceneObject = GameObject.FindWithTag("OptionsScene");
+        
         bulletHell_ControlManager = GameObject.FindWithTag("BulletControl");
         bulletHell_GameManager = GameObject.FindWithTag("BulletGame");
  
@@ -95,6 +123,7 @@ public class MediatorScript : MonoBehaviour
          
         bulletHell_Camera = GameObject.Find("bulletHell_Camera").GetComponent<Camera>();
         maze_Camera = GameObject.Find("maze_Camera").GetComponent<Camera>();
+        options_Camera = GameObject.Find("options_Camera").GetComponent<Camera>();
         
         maze_AudioListener = maze_Camera.GetComponent<AudioListener>();
         bulletHell_AudioListener = bulletHell_Camera.gameObject.GetComponent<AudioListener>();
@@ -102,12 +131,20 @@ public class MediatorScript : MonoBehaviour
         pointsScript = maze_GameManager.GetComponent<Points>();
         
         setShaderVars = this.gameObject.GetComponent<SetShaderVars>();
+
+        bullet_AudioManager = FindAnyObjectByType<BulletHellAudioManager>();
+        maze_AudioManager = FindAnyObjectByType<SoundManager>();
+        
+        options_ControlManager = GameObject.FindWithTag("OptionsControl");
+        
         
         // Make sure chromatic abberation is reset when game starts
         setShaderVars.ResetChromatic();
         
         // Disable bullet hell minigame
         DisableBulletHell();
+        options_SceneObject.SetActive(false);
+        options_ControlManager.SetActive(false);
 
         // Set singleton
         if (instance == null) instance = this;
@@ -180,6 +217,31 @@ public class MediatorScript : MonoBehaviour
         maze_SceneObject.SetActive(!b);
 
         
+    }
+
+    public void LoadOptionsMenu(bool b)
+    {
+        if (b)
+        {
+            maze_ControlManager.SetActive(!b);
+            options_ControlManager.SetActive(b);
+            
+        }
+        else
+        {
+            options_ControlManager.SetActive(b);
+            maze_ControlManager.SetActive(!b);
+            
+            
+        }
+
+        maze_AudioListener.enabled = !b;
+        //maze_GameManager.SetActive(!b);
+        //maze_SceneObject.SetActive(!b);
+        
+        options_SceneObject.SetActive(b);
+        
+        options_Camera.gameObject.transform.position = maze_Camera.gameObject.transform.position;
     }
 
     public void BulletHellToMaze()

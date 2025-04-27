@@ -10,6 +10,18 @@ public class CheckShaderState : MonoBehaviour
         if (!MediatorScript.instance) return;
         if (!MediatorScript.instance.GetShader())
         {
+            cameraData.SetRenderer(0);
+        }
+        else
+        {
+            cameraData.SetRenderer(1);
+        }
+    }
+
+    public void ManualUpdate(bool b)
+    {
+        if (b)
+        {
             cameraData.SetRenderer(1);
         }
         else

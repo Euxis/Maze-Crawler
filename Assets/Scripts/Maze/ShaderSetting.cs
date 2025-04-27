@@ -32,4 +32,16 @@ public class ShaderSetting : MonoBehaviour
             }
         }
     }
+    
+    public void ManualUpdate(bool b)
+    {
+        if (b)
+        {
+            cameraData.SetRenderer(1);
+        }
+        else
+        {
+            cameraData.SetRenderer(0);
+        }
+    }
 }

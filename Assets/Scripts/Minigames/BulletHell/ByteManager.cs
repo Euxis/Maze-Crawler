@@ -16,7 +16,8 @@ public class ByteManager : MonoBehaviour
 
     private void Awake()
     {
-        
+        currentBytes = 0;
+        currentBytesText.text = currentBytes.ToString();
     }
 
     public void SetMaxBytes(int i)

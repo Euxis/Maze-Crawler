@@ -18,10 +18,16 @@ public class SoundManager : MonoBehaviour
         //Debug.Log("Playing BGM");
         bgmSource.clip = bgmHacking;
         bgmSource.loop = true;
-        bgmSource.volume = 0.05f;
+        bgmSource.volume = 5f;
         bgmSource.PlayOneShot(bgmSource.clip);
     }
-    
+
+    public void SetVolume(int v)
+    {
+        bgmSource.volume = v / 10f;
+        sfxSource.volume = v / 10f;
+    }
+
 
     /// <summary>
     /// Toggle BGM 
@@ -39,7 +45,7 @@ public class SoundManager : MonoBehaviour
 
             }else
             {
-                bgmSource.volume = 0.05f;
+                bgmSource.volume = 5f;
                 toggleBGM = true;
                 // Also enables BGM on minigames
                 MediatorScript.instance.SetBGM(true);

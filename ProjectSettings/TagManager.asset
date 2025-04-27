@@ -17,6 +17,12 @@ TagManager:
   - BulletSpawner
   - BulletHellPrefab
   - BulletHellByte
+  - MazeAudioManager
+  - BulletAudioManager
+  - OptionsControl
+  - OptionsScene
+  - MazeCamera
+  - OptionsCamera
   layers:
   - Default
   - TransparentFX

@@ -18,11 +18,13 @@ public class PrefabLoader : MonoBehaviour
              "after Resources/</b>.")]
     private string prefabPath;
     private List<SpawnableObject> prefabs = new();
+    private GameObject prefabParent;
 
     private void Awake()
     {
         prefabs = LoadPrefabs(prefabPath);
     }
+    
 
     private List<SpawnableObject> LoadPrefabs(string path)
     {
@@ -97,12 +99,14 @@ public class PrefabLoader : MonoBehaviour
         Vector3 position,
         Quaternion rotation)
     {
+        if(prefabParent == null) prefabParent = GameObject.FindWithTag("BulletHellPrefab");
+
         if (!TryGetPrefab(objectId, out var prefab))
         {
             return null;
         }
         
-        return Instantiate(prefab.gameObject, position, rotation);
+        return Instantiate(prefab.gameObject, position, rotation, prefabParent.transform);
     }
     
     /// <summary>
