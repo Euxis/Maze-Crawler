@@ -1,0 +1,36 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 821f109c3c05a2a49a7356d4f3bf52cd, type: 3}
+  m_Name: IncreaseHP
+  m_EditorClassIdentifier: 
+  cardId: card_player_hp_increase
+  title:
+    m_TableReference:
+      m_TableCollectionName: GUID:590d8fa15e20ff94f8d6152f5e2d96d3
+    m_TableEntryReference:
+      m_KeyId: 31033286656
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  description:
+    m_TableReference:
+      m_TableCollectionName: GUID:590d8fa15e20ff94f8d6152f5e2d96d3
+    m_TableEntryReference:
+      m_KeyId: 33893801984
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

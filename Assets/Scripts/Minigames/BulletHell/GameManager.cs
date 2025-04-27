@@ -55,6 +55,7 @@ public class GameManager : MonoBehaviour
         completeText.gameObject.SetActive(false);
         enemyManager.DestroyAllEnemies();
         enemyManager.ClearEnemies();
+        byteSpawner.ClearAllBytes();
     }
 
     public void StartGame(String mode)
