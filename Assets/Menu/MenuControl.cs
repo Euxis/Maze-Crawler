@@ -155,12 +155,12 @@ public class MenuControl : MonoBehaviour
         if (b)
         {
             cameraData.SetRenderer(0);
-            MediatorScript.instance.SetShader(false);
+            MediatorScript.instance.SetShader(true);
         }
         else
         {
             cameraData.SetRenderer(1);
-            MediatorScript.instance.SetShader(true);
+            MediatorScript.instance.SetShader(false);
         }
     }
 

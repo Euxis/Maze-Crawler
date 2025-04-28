@@ -37,11 +37,11 @@ public class ShaderSetting : MonoBehaviour
     {
         if (b)
         {
-            cameraData.SetRenderer(1);
+            cameraData.SetRenderer(0);
         }
         else
         {
-            cameraData.SetRenderer(0);
+            cameraData.SetRenderer(1);
         }
     }
 }

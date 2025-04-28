@@ -8,7 +8,7 @@ public class CheckShaderState : MonoBehaviour
     private void OnEnable()
     {
         if (!MediatorScript.instance) return;
-        if (!MediatorScript.instance.GetShader())
+        if (MediatorScript.instance.GetShader())
         {
             cameraData.SetRenderer(0);
         }
@@ -18,15 +18,17 @@ public class CheckShaderState : MonoBehaviour
         }
     }
 
+    // 1: disable post processing
+    // 0: post processing
     public void ManualUpdate(bool b)
     {
         if (b)
         {
-            cameraData.SetRenderer(1);
+            cameraData.SetRenderer(0);
         }
         else
         {
-            cameraData.SetRenderer(0);
+            cameraData.SetRenderer(1);
         }
     }
 }
