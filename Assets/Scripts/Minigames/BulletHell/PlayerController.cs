@@ -9,9 +9,10 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
     [Header("Player Settings")]
-    public float moveSpeed = 5f;
+    public float moveSpeed = 3f;
 
-    public float hurtSpeed = 3f;    // Speed when player is in invincibility window
+    public float normalSpeed = 5f;
+    public float hurtSpeed = 1.5f;    // Speed when player is in invincibility window
     public int maxLives = 3;
     public int currentLives;
     private int additionalLives = 0;
@@ -23,15 +24,14 @@ public class PlayerController : MonoBehaviour
     private Vector2 playerPosition;
 
     [Header("References")]
-    public GameObject hitEffect;
-    public AudioClip hitSound;
-    
     [SerializeField] private Rigidbody2D rbPlayer;
     private AudioSource audioSource;
     
     [SerializeField] private GameObject objGameManager;
     [SerializeField] private GameManager gameManager;
     [SerializeField] private ByteManager byteManager;
+    [SerializeField] private BulletHellAudioManager audioManager;
+    [SerializeField] private GameObject BulletDeflectPrefab;
     
     // Sprite renderer things
     [SerializeField] private SpriteRenderer spriteRendererPlayer;
@@ -155,6 +155,11 @@ public class PlayerController : MonoBehaviour
             Destroy(other.gameObject);
             if(!isInvincible) TakeDamage();
         }
+
+        if (other.CompareTag("Slow"))
+        {
+            StartCoroutine(SlowFieldHit());
+        }
     }
 
     
@@ -164,19 +169,13 @@ public class PlayerController : MonoBehaviour
     /// </summary>
     private void TakeDamage()
     {
+        // Deduct lives
         currentLives--;
         
-        // Play hit effect
-        if (hitEffect != null)
-        {
-            Instantiate(hitEffect, transform.position, Quaternion.identity);
-        }
-        
         // Play hit sound
-        if (hitSound != null)
-        {
-            audioSource.PlayOneShot(hitSound);
-        }
+        audioManager.PlayHurt();
+        
+        Instantiate(BulletDeflectPrefab, rbPlayer.transform);
         
         // destroy surrounding bullets
         var BulletList = GameObject.FindGameObjectsWithTag("Bullet");
@@ -235,13 +234,14 @@ public class PlayerController : MonoBehaviour
         spriteRendererPlayer.color = Color.red;
         isInvincible = true;
         //SetInvulnerability(true);
-
         
         // Slow down the player
-        var tmp = moveSpeed;
-        moveSpeed = hurtSpeed;
+        if (moveSpeed != hurtSpeed)
+        {
+            moveSpeed = hurtSpeed;
+        }
         
-        yield return new WaitForSeconds(2.0f);
+        yield return new WaitForSeconds(1.0f);
         spriteRendererPlayer.color = colorPlayer;
         
         //SetInvulnerability(false);
@@ -249,6 +249,22 @@ public class PlayerController : MonoBehaviour
         MediatorScript.instance.setShaderVars.ResetChromatic();
         isInvincible = false;
 
-        moveSpeed = tmp;
+        moveSpeed = normalSpeed;
+    }
+
+    private IEnumerator SlowFieldHit()
+    {
+        // don't do anything if the player is already hurt
+        if (!isInvincible)
+        {
+            spriteRendererPlayer.color = Color.yellow;
+            
+            moveSpeed = hurtSpeed;
+        
+            yield return new WaitForSeconds(2.5f);
+            spriteRendererPlayer.color = Color.green;
+
+            moveSpeed = normalSpeed;
+        }
     }
 }

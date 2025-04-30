@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
@@ -8,18 +9,72 @@ public class SoundManager : MonoBehaviour
 {
     public AudioClip[] playerSteps = new AudioClip[6];
     public AudioClip playerStep;
-    public AudioClip bgmHacking;
+    
+    [Header("Hacking Songs")]
+    [SerializeField] private AudioClip bgmHacking;
+    
+    // includes both start [0] and looped versions [1]
+    [SerializeField] private AudioClip[] bgmHacking2 = new AudioClip[2];
+    
     [SerializeField] private AudioSource bgmSource;
     [SerializeField] private AudioSource sfxSource;
     private bool toggleBGM = true;
 
+    private void Awake()
+    {
+        PlayBGM();
+        
+    }
+
+    private void Start()
+    {
+        // default volume
+        bgmSource.volume = 0.5f;
+    }
+
+    private void OnEnable()
+    {
+        if(bgmSource.isPlaying) return;
+        PlayBGM();
+    }
+
+    private void Update()
+    {
+        if (bgmSource.clip == bgmHacking2[0] && !bgmSource.isPlaying)
+        {
+            bgmSource.clip = bgmHacking2[1];
+            bgmSource.loop = true;
+            bgmSource.Play();
+        }
+    }
+
+    private IEnumerator WaitForLoop(float time)
+    {
+        yield return new WaitForSeconds(time);
+        bgmSource.clip = bgmHacking2[1];
+        bgmSource.loop = true;
+        bgmSource.Play();
+    }
+
     public void PlayBGM()
     {
-        //Debug.Log("Playing BGM");
-        bgmSource.clip = bgmHacking;
-        bgmSource.loop = true;
-        bgmSource.volume = 5f;
-        bgmSource.PlayOneShot(bgmSource.clip);
+        StopAllCoroutines();
+        var rand = Random.Range(0, 2);
+        if (rand == 0)
+        {
+            bgmSource.loop = true;
+            bgmSource.clip = bgmHacking;
+        }
+        else
+        {
+            bgmSource.loop = false;
+            bgmSource.clip = bgmHacking2[0];
+        }
+
+        
+
+        bgmSource.Play();
+        //if (rand == 1) StartCoroutine(WaitForLoop(bgmHacking2[0].length));
     }
 
     public void SetVolume(int v)

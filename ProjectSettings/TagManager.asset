@@ -23,6 +23,7 @@ TagManager:
   - OptionsScene
   - MazeCamera
   - OptionsCamera
+  - Slow
   layers:
   - Default
   - TransparentFX

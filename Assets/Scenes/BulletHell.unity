@@ -446,7 +446,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minigameClip: {fileID: 8300000, guid: 62aa733fe8671924baf9fd641daaf16f, type: 3}
   minigameClip2: {fileID: 8300000, guid: 8fd50be51788f4d488094e0b5f1bd067, type: 3}
+  minigameCollectClip: {fileID: 8300000, guid: cda1bbefd7b78bf4f8e8aca6399a4e44, type: 3}
+  hurtSFX: {fileID: 8300000, guid: 7a9314b322c05c2499884aee2defd6be, type: 3}
   sourceBGM: {fileID: 296793827}
+  sourceSFX: {fileID: 1484357307}
 --- !u!114 &150504653
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2737,7 +2740,7 @@ Tilemap:
       e33: 1
   m_TileColorArray:
   - m_RefCount: 0
-    m_Data: {r: 6.8745e-41, g: 6.8745e-41, b: 6.8745e-41, a: 6.8745e-41}
+    m_Data: {r: 7.5e-41, g: 7.5e-41, b: 7.5e-41, a: 7.5e-41}
   - m_RefCount: 180
     m_Data: {r: 0, g: 1, b: 0, a: 1}
   m_TileObjectToInstantiateArray: []
@@ -3150,6 +3153,26 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: c01a440d-8755-4098-bd94-c7102ea66ab8
     m_ActionName: 'TitleMenu/Exit[/Keyboard/escape]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 97758132-06d4-4f7f-a52a-be8a45c9358b
+    m_ActionName: 'Player: Maze/Menu[/Keyboard/escape]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: c63c9897-9e2a-4e07-bdf7-82fab2478322
+    m_ActionName: 'Options Menu/Select Option[/Keyboard/upArrow,/Keyboard/downArrow,/Keyboard/leftArrow,/Keyboard/rightArrow,/Keyboard/w,/Keyboard/s,/Keyboard/a,/Keyboard/d]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: fa4126e1-a8e1-489d-add3-d3b123ad238b
+    m_ActionName: 'Options Menu/Confirm[/Keyboard/x]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 275e14a8-cd5c-4237-8b91-ae91c8e8e233
+    m_ActionName: 'Options Menu/Resume[/Keyboard/escape]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 7c2f8de4-d264-46f1-8b85-5a60e4225009
+    m_ActionName: 'Options Menu/Back[/Keyboard/z]'
   m_NeverAutoSwitchControlSchemes: 1
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Bullet Hell
@@ -3597,6 +3620,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 296793826}
+  - {fileID: 1484357306}
   m_Father: {fileID: 819129076}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1345790916
@@ -4017,6 +4041,135 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   prefabPath: Prefabs/Spawnable/BulletHell/Enemies
+--- !u!1 &1484357305
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1484357306}
+  - component: {fileID: 1484357307}
+  m_Layer: 0
+  m_Name: audioSFX
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1484357306
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1484357305}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1345790915}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1484357307
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1484357305}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.646
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1504576945
 GameObject:
   m_ObjectHideFlags: 0
@@ -4186,12 +4339,12 @@ MonoBehaviour:
   hurtSpeed: 3
   maxLives: 3
   currentLives: 0
-  hitEffect: {fileID: 0}
-  hitSound: {fileID: 0}
   rbPlayer: {fileID: 1504576948}
   objGameManager: {fileID: 150504648}
   gameManager: {fileID: 150504649}
   byteManager: {fileID: 150504655}
+  audioManager: {fileID: 150504652}
+  BulletDeflectPrefab: {fileID: 1721654659972508218, guid: 2c96edb324812ce4e827251eef9525e6, type: 3}
   spriteRendererPlayer: {fileID: 1504576949}
   isInvincible: 0
   setShaderVars: {fileID: 0}

@@ -216,7 +216,7 @@ public class MediatorScript : MonoBehaviour
         maze_ControlManager.SetActive(!b);
         maze_SceneObject.SetActive(!b);
 
-        
+        if(!b) maze_AudioManager.PlayBGM();
     }
 
     public void LoadOptionsMenu(bool b)

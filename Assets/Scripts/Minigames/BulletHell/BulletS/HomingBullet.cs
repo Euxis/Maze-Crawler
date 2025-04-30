@@ -26,7 +26,7 @@ public class HomingBullet : Attack
     /// <summary>
     /// Will launch as normal, homes in on player if they are nearby.
     /// </summary>
-    /// <param name="dir">The direction where the bullet will goe</param>
+    /// <param name="dir">The direction where the bullet will go</param>
     public override void Launch(Vector2 dir)
     {
         dir = dir.normalized;

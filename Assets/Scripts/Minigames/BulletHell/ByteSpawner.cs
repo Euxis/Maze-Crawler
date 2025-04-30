@@ -64,7 +64,8 @@ public class ByteSpawner : MonoBehaviour
             positionY = Mathf.Clamp(positionY, -4, 4);
             newPosition = new Vector2(positionX, positionY);
         } while (spawnPoints.Contains(newPosition) && spawnPoints.Count > 0 && CheckForOccupance(newPosition));
-        spawnPoints.Add(newPosition);
+        // double check
+        if(CheckForOccupance(newPosition)) spawnPoints.Add(newPosition);
     }
 
     /// <summary>
@@ -73,7 +74,7 @@ public class ByteSpawner : MonoBehaviour
     /// <returns></returns>
     private bool CheckForOccupance(Vector2 pos)
     {
-        var checkResults = Physics2D.OverlapPoint(pos, LayerMask.GetMask("BulletSpawner"));
+        var checkResults = Physics2D.OverlapCircle(pos, 4f, LayerMask.GetMask("BulletSpawner"));
         // return true if free
         if (checkResults == null)
             return true;

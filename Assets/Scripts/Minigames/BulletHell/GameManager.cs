@@ -134,7 +134,7 @@ public class GameManager : MonoBehaviour
 
     private void StartMusic()
     {
-        bulletHellAudio.StartMusic();
+        bulletHellAudio.StartMusic(gamemode);
     }
 
     /// <summary>
